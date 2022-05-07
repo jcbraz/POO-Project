@@ -180,6 +180,7 @@ public class MainMethods implements Comparator<CasaInteligente> {
         return ci.getDivisoes();
     }
 
+
     /**
      * > This function sets the devices map to the devices map passed in as a
      * parameter
@@ -297,7 +298,7 @@ public class MainMethods implements Comparator<CasaInteligente> {
      * @param divisao           The name of the room where the device will be
      *                          placed.
      */
-    public void criaBulb(boolean isON, String tonalidade, double dimensoes, double consumoDiarioBulb, String divisao) {
+    public void criaBulb(boolean isON, String tonalidade, double dimensoes, float consumoDiarioBulb, String divisao) {
         SmartDevices device = new SmartBulb(isON, tonalidade, dimensoes, consumoDiarioBulb);
         this.devices.put(device.getId(), device);
         this.ci.addDeviceToDivisao(divisao, device);
@@ -317,7 +318,7 @@ public class MainMethods implements Comparator<CasaInteligente> {
      *                             placed.
      */
     public void criaSpeaker(boolean isON, int volume, String nomeRadio, String marcaEquipamento,
-            int consumoDiarioSpeaker, String divisao) {
+            float consumoDiarioSpeaker, String divisao) {
         SmartDevices device = new SmartSpeaker(isON, volume, nomeRadio, marcaEquipamento, consumoDiarioSpeaker);
         this.devices.put(device.getId(), device);
         this.ci.addDeviceToDivisao(divisao, device);
@@ -336,7 +337,7 @@ public class MainMethods implements Comparator<CasaInteligente> {
      * @param divisao             The name of the room where the device will be
      *                            placed.
      */
-    public void criaCamera(boolean isON, int resolution_x, int resolution_y, double filesize, int consumoDiarioCamera,
+    public void criaCamera(boolean isON, int resolution_x, int resolution_y, double filesize, float consumoDiarioCamera,
             String divisao) {
         SmartDevices device = new SmartCamera(isON, resolution_x, resolution_y, filesize, consumoDiarioCamera);
         this.devices.put(device.getId(), device);
@@ -421,6 +422,24 @@ public class MainMethods implements Comparator<CasaInteligente> {
                 .findFirst()
                 .get()
                 .getCodigosDeFaturas();
+    }
+
+    public ArrayList<Integer> printsFaturasCodes (int codeCasa) {
+        return this.art.getCasas().get(codeCasa).getCodigosDeFaturas();
+    }
+
+    public void printsFatura(int codeFatura) {
+        Fatura fatura = this.art.getFaturas().get(codeFatura);
+        System.out.println("Código de Fornecedor: " + fatura.getFornecedor() + "\n" +
+        "Código de Casa: " + fatura.getCodigoCasa() + "\n" +
+        "NIF do Cliente: " + fatura.getNifCliente() + "\n" +
+        "Código de Fatura: " + fatura.getCode() + "\n" +
+        "Perído de Recolha de Dados: \n\n" +
+        "Data Inicial: " + fatura.getDateInicio() + "\n" +
+        "Data Final: " + fatura.getDateFim() + "\n\n" +
+        "Energia Consumida: " + fatura.getConsumo() + "\n\n" +
+        "Custo Total: " + fatura.getCusto() + "\n\n"
+        );
     }
 
     // 4ª stat

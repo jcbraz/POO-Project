@@ -1,3 +1,6 @@
+/**
+ * SmartBulb is a class that represents a smart bulb
+ */
 public class SmartBulb extends SmartDevices {
 
     private static int counter = 0;
@@ -5,9 +8,9 @@ public class SmartBulb extends SmartDevices {
     private int id;
     private String tonalidade;
     private double dimensoes; // em centimetros
-    private double consumoDiarioBulb;
+    private float consumoDiarioBulb;
 
-    public SmartBulb(boolean isON, String tonalidade, double dimensoes, double consumoDiarioBulb) {
+    public SmartBulb(boolean isON, String tonalidade, double dimensoes, float consumoDiarioBulb) {
         this.isON = isON;
         this.id = counter++;
         this.tonalidade = tonalidade;
@@ -67,7 +70,7 @@ public class SmartBulb extends SmartDevices {
         this.dimensoes = dimensoes;
     }
 
-    public void setconsumoDiarioBulb(int consumoDiarioBulb) {
+    public void setconsumoDiarioBulb(float consumoDiarioBulb) {
         this.consumoDiarioBulb = consumoDiarioBulb;
     }
 

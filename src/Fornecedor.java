@@ -1,3 +1,6 @@
+/**
+ * Fornecedor is a class that represents a supplier of energy to a house
+ */
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;

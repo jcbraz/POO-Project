@@ -1,3 +1,6 @@
+/**
+ * SmartCamera is a class that represents a smart camera
+ */
 public class SmartCamera extends SmartDevices {
 
     private static int counter = 0;
@@ -6,7 +9,7 @@ public class SmartCamera extends SmartDevices {
     private int resolution_x; // pixeis
     private int resolution_y; // pixeis
     private double filesize;
-    private int consumoDiarioCamera;
+    private float consumoDiarioCamera;
 
     public SmartCamera() {
         this.isON = false;
@@ -17,7 +20,7 @@ public class SmartCamera extends SmartDevices {
         this.consumoDiarioCamera = 0;
     }
 
-    public SmartCamera(boolean isON, int resolution_x, int resolution_y, double filesize, int consumoDiarioCamera) {
+    public SmartCamera(boolean isON, int resolution_x, int resolution_y, double filesize, float consumoDiarioCamera) {
         this.isON = isON;
         this.id = counter++;
         this.resolution_x = resolution_x;
@@ -46,7 +49,7 @@ public class SmartCamera extends SmartDevices {
         return filesize;
     }
 
-    public int getConsumoDiarioCamera() {
+    public double getConsumoDiarioCamera() {
         return consumoDiarioCamera;
     }
 
@@ -74,7 +77,7 @@ public class SmartCamera extends SmartDevices {
         this.filesize = filesize;
     }
 
-    public void setConsumoDiarioCamera(int consumoDiarioCamera) {
+    public void setConsumoDiarioCamera(float consumoDiarioCamera) {
         this.consumoDiarioCamera = consumoDiarioCamera;
     }
 

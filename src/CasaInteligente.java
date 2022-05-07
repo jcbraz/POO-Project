@@ -1,3 +1,7 @@
+/**
+ * This class represents a smart house, which has a name, an address, a list of smart devices, and a
+ * list of bills
+ */
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
@@ -42,23 +46,23 @@ public class CasaInteligente {
     }
 
     public String getNomeProprietario() {
-        return nomeProprietario;
+        return this.nomeProprietario;
     }
 
     public int getNifProprietario() {
-        return nifProprietario;
+        return this.nifProprietario;
     }
 
     public String getMorada() {
-        return morada;
+        return this.morada;
     }
 
     public ArrayList<Integer> getCodigosDeFaturas() {
-        return codigosDeFaturas;
+        return this.codigosDeFaturas;
     }
 
     public int getCode() {
-        return code;
+        return this.code;
     }
 
     public Map<String, Map<Integer, SmartDevices>> getDivisoes() {

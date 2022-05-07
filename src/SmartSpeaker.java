@@ -1,3 +1,6 @@
+/**
+ * SmartSpeaker is a class that represents a smart speaker
+ */
 public class SmartSpeaker extends SmartDevices {
 
     private static int counter = 0;
@@ -6,7 +9,7 @@ public class SmartSpeaker extends SmartDevices {
     private int id;
     private String nomeRadio;
     private String marcaEquipamento;
-    private int consumoDiarioSpeaker; // função da marca do equipamento
+    private float consumoDiarioSpeaker; // função da marca do equipamento
 
     public SmartSpeaker() {
         this.isON = false;
@@ -18,7 +21,7 @@ public class SmartSpeaker extends SmartDevices {
     }
 
     public SmartSpeaker(boolean isON, int volume, String nomeRadio, String marcaEquipamento,
-            int consumoDiarioSpeaker) {
+            float consumoDiarioSpeaker) {
         this.volume = volume;
         this.id = counter++;
         this.nomeRadio = nomeRadio;
@@ -46,7 +49,7 @@ public class SmartSpeaker extends SmartDevices {
         return marcaEquipamento;
     }
 
-    public int getconsumoDiarioSpeaker() {
+    public double getconsumoDiarioSpeaker() {
         return consumoDiarioSpeaker;
     }
 
@@ -74,7 +77,7 @@ public class SmartSpeaker extends SmartDevices {
         this.marcaEquipamento = marcaEquipamento;
     }
 
-    public void setconsumoDiarioSpeaker(int consumoDiarioSpeaker) {
+    public void setconsumoDiarioSpeaker(float consumoDiarioSpeaker) {
         this.consumoDiarioSpeaker = consumoDiarioSpeaker;
     }
 

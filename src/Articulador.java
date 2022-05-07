@@ -1,3 +1,6 @@
+/**
+ * It's a class that represents a system that manages houses, suppliers and bills
+ */
 import java.util.Map;
 import java.util.HashMap;
 import java.util.stream.Collectors;
