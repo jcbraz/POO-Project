@@ -309,6 +309,7 @@ public class Main {
                                     if (opcaoBulb == 1) {
                                         if (mainMethods.getDeviceWithCode(codigoDispositivo).isON()) {
                                             mainMethods.getDeviceWithCode(codigoDispositivo).setOFF();
+                                            mainMethods.getBulbWithCode(codigoDispositivo).setconsumoDiarioBulb(0);
                                             System.out.println("Alteração realizada com sucesso!\n");
 
                                         } else {
@@ -386,6 +387,7 @@ public class Main {
                                     if (opcaoCamera == 1) { // Ligar ou desligar a camera
                                         if (mainMethods.getDeviceWithCode(codigoDispositivo).isON()) {
                                             mainMethods.getDeviceWithCode(codigoDispositivo).setOFF();
+                                            mainMethods.getCameraWithCode(codigoDispositivo).setConsumoDiarioCamera(0);
                                             System.out.println("Alteração realizada com sucesso!\n");
                                         } else {
                                             mainMethods.getDeviceWithCode(codigoDispositivo).setON();
@@ -484,6 +486,7 @@ public class Main {
                                     if (opcaoSpeaker == 1) { // Ligar ou desligar o speaker
                                         if (mainMethods.getDeviceWithCode(codigoDispositivo).isON()) {
                                             mainMethods.getDeviceWithCode(codigoDispositivo).setOFF();
+                                            mainMethods.getSpeakerWithCode(codigoDispositivo).setconsumoDiarioSpeaker(0);
                                         } else {
                                             mainMethods.getDeviceWithCode(codigoDispositivo).setON();
                                             System.out.println("Alteração realizada com sucesso!\n");
