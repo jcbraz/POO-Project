@@ -195,13 +195,13 @@ public class SmartCamera extends SmartDevices {
     public double consumoDiario() {
         double grauConsumo = 0.00;
         if (this.resolution_x == 640 && this.resolution_y == 480)
-            grauConsumo = 1.00;
+            grauConsumo = (this.resolution_x * this.resolution_y * this.filesize * 0.001 * 0.001 * 0.0005);
         else if (this.resolution_x == 1280 && this.resolution_y == 720)
-            grauConsumo = 1.05;
+            grauConsumo = (this.resolution_x * this.resolution_y * this.filesize * 0.001 * 0.001 * 0.0005);
         else if (this.resolution_x == 1920 && this.resolution_y == 1080)
-            grauConsumo = 1.12;
+            grauConsumo = (this.resolution_x * this.resolution_y * this.filesize * 0.001 * 0.001 * 0.0005);
         else if (this.resolution_x == 3840 && this.resolution_y == 2160)
-            grauConsumo = 1.38;
+            grauConsumo = (this.resolution_x * this.resolution_y * this.filesize * 0.001 * 0.001 * 0.0005);
         else {
             System.out.println("Introduza uma resolução válida");
             return -1;

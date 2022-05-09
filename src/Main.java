@@ -186,7 +186,7 @@ public class Main {
                                     x = 3840;
                                     y = 2160;
                                 }
-                                System.out.println("Insira o tamanho de ficheiro (em kB)\n");
+                                System.out.println("Insira o tamanho de ficheiro (em segundos)\n");
                                 double filesize = sc.nextDouble();
                                 System.out.println(
                                         "Insira o consumo diário do dispositivo (em KWh (com vírgula em caso de número decimal.))\n");
