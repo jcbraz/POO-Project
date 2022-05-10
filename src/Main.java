@@ -31,8 +31,7 @@ public class Main {
                                 "6 - Alterar configuração de dispositivos,\n" +
                                 "7 - Alterar o Fornecedor de uma dada Casa Inteligente,\n" +
                                 "8 - Avançar para determinada data & Gerar Fatura.\n" +
-                                "9 - Consultar estatísticas de consumo,\n"
-                                );
+                                "9 - Consultar estatísticas de consumo,\n");
                 try {
                     while (!sc.hasNextInt()) {
                         sc.next();
@@ -77,8 +76,13 @@ public class Main {
                         System.out.println(
                                 "Fornecedor não existe. Por favor, crie o fornecedor primeiro.\n");
                     } else {
-                        System.out.println("Casa criada com sucesso!\n");
-                        mainMethods.addCasaToFornecedor();
+                        try {
+                            System.out.println("Casa criada com sucesso!\n");
+                            mainMethods.addCasaToFornecedor();
+                        } catch (Exception e) {
+                            System.out.println(
+                                    e.getMessage());
+                        }
                     }
                     break;
 
@@ -95,9 +99,13 @@ public class Main {
                         mainMethods.criaDivisao("Quarto", new HashMap<Integer, SmartDevices>());
                         mainMethods.criaDivisao("Cozinha", new HashMap<Integer, SmartDevices>());
                         mainMethods.criaDivisao("Casa de Banho", new HashMap<Integer, SmartDevices>());
-                        System.out.println("Insira a divisão que pretende selecionar/criar.\n"
-                                + "As divisões disponíveis até ao momentos são: \n"
-                                + mainMethods.getCiWithCode(codigoCasa).getDivisoes());
+                        try {
+                            System.out.println("Insira a divisão que pretende selecionar/criar.\n"
+                                    + "As divisões disponíveis até ao momentos são: \n"
+                                    + mainMethods.getCiWithCode(codigoCasa).getDivisoes());
+                        } catch (CasaInexistenteException e) {
+                            System.out.println(e.getMessage());
+                        }
                         sc.nextLine();
                         String divisao = sc.nextLine();
                         int resposta = 0;
@@ -220,13 +228,19 @@ public class Main {
                                     .containsKey(codigoDispositivoInDiv)) {
                                 System.out.println("Dispositivo não existe.\n");
                             } else {
-                                mainMethods.getArt().getCasas().get(codigoCasaElemDisp).getDivisoes().get(divisaoDisp)
-                                        .remove(codigoDispositivoInDiv);
+                                try {
+                                    mainMethods.addPedido(pedido -> {
+                                        pedido.getArt().getCasas().get(codigoCasaElemDisp).getDivisoes()
+                                                .get(divisaoDisp)
+                                                .remove(codigoDispositivoInDiv);
+                                    });
+                                } catch (Exception e) {
+                                    System.out.println(e.getMessage());
+                                }
                             }
                         }
+                        System.out.println("Dispositivo removido com sucesso!\n");
                     }
-                    System.out.println("Dispositivo removido com sucesso!\n");
-
                     break;
                 case 5:
                     System.out.println("Insira o código da casa: \n" + "As casas disponíveis até ao momentos são"
@@ -236,15 +250,20 @@ public class Main {
                         System.out.println(
                                 "Casa não existe.\n");
                     } else {
-                        mainMethods.removeCasaFromArt(codigoCasa);
-                        mainMethods.getArt().getFornecedores().values().forEach(fornecedor -> {
-                            if (fornecedor.getClientes().containsKey(codigoCasa)) {
-                                mainMethods.removeCasaFromFornecedor();
-                                System.out.println(fornecedor.getClientes());
-                            }
-                        });
+                        try {
+                            mainMethods.addPedido(pedido -> {
+                                pedido.removeCasaFromArt(codigoCasa);
+                                pedido.getArt().getFornecedores().values().forEach(fornecedor -> {
+                                    if (fornecedor.getClientes().containsKey(codigoCasa)) {
+                                        pedido.removeCasaFromFornecedor();
+                                        System.out.println(fornecedor.getClientes());
+                                    }
+                                });
+                            });
+                            } catch (Exception e) {
+                                System.out.println(e.getMessage());
+                        }
                     }
-                    System.out.println("Casa removida com sucesso!\n");
                     break;
                 case 6:
                     System.out.println("Insira o código da casa\n" + "As casas disponíveis até ao momentos são"
@@ -254,9 +273,13 @@ public class Main {
                         System.out.println(
                                 "Casa não existe.\n");
                     } else {
-                        System.out.println("Qual o nome da divisão que se encontra o dispositivo?\n"
-                                + "As divisões disponíveis até ao momentos são"
-                                + mainMethods.getCiWithCode(codigoCasa).getDivisoes());
+                        try {
+                            System.out.println("Qual o nome da divisão que se encontra o dispositivo?\n"
+                                    + "As divisões disponíveis até ao momentos são"
+                                    + mainMethods.getCiWithCode(codigoCasa).getDivisoes());
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
                         sc.nextLine();
                         String divisao = sc.nextLine();
                         if (!mainMethods.existeDivisaoInCasa(divisao)) {
@@ -278,7 +301,11 @@ public class Main {
                                 }
                             } while (opcaoDispositivos < 1 || opcaoDispositivos > 3);
                             if (opcaoDispositivos == 1) {
-                                System.out.println(mainMethods.getDivisao(divisao).values().toString());
+                                try {
+                                    System.out.println(mainMethods.getDivisao(divisao).values().toString());
+                                } catch (DivisoesException e) {
+                                    System.out.println(e.getMessage());
+                                }
                                 int codigoDispositivo = 0;
                                 do {
                                     System.out.println("Insira o código do dispositivo a alterar:\n");
@@ -290,70 +317,82 @@ public class Main {
                                         opcaoDispositivos = 0;
                                     }
                                 } while (!mainMethods.existeDispositivo(codigoDispositivo));
-
-                                if (mainMethods.getDeviceWithCode(codigoDispositivo).isBulb()) {
-                                    int opcaoBulb = 0;
-                                    do {
-                                        System.out.println("O que pretende alterar?\n" +
-                                                "1 - Ligar/Desligar a lâmpada\n" +
-                                                "2 - Alterar a tonalidade\n" +
-                                                "3 - Alterar o consumo diário\n");
-                                        try {
-                                            opcaoBulb = sc.nextInt();
-                                        } catch (Exception e) {
-                                            System.out.println(
-                                                    "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
-                                            opcaoBulb = 0;
-                                        }
-                                    } while (opcaoBulb < 1 || opcaoBulb > 3);
-                                    if (opcaoBulb == 1) {
-                                        if (mainMethods.getDeviceWithCode(codigoDispositivo).isON()) {
-                                            mainMethods.getDeviceWithCode(codigoDispositivo).setOFF();
-                                            mainMethods.getBulbWithCode(codigoDispositivo).setconsumoDiarioBulb(0);
-                                            System.out.println("Alteração realizada com sucesso!\n");
-
-                                        } else {
-                                            mainMethods.getDeviceWithCode(codigoDispositivo).setON();
-                                            System.out.println("Alteração realizada com sucesso!\n");
-
-                                        }
-                                    } else if (opcaoBulb == 2) {
-                                        int opcaotonalidade = 0;
+                                try {
+                                    if (mainMethods.getDeviceWithCode(codigoDispositivo).isBulb()) {
+                                        int opcaoBulb = 0;
                                         do {
-                                            System.out.println("Insira a nova tonalidade\n" +
-                                                    "1 - Cold\n" +
-                                                    "2 - Neutral\n" +
-                                                    "3 - Warm\n");
+                                            System.out.println("O que pretende alterar?\n" +
+                                                    "1 - Ligar/Desligar a lâmpada\n" +
+                                                    "2 - Alterar a tonalidade\n" +
+                                                    "3 - Alterar o consumo diário\n");
                                             try {
-                                                opcaotonalidade = sc.nextInt();
+                                                opcaoBulb = sc.nextInt();
                                             } catch (Exception e) {
                                                 System.out.println(
                                                         "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
-                                                opcaotonalidade = 0;
+                                                opcaoBulb = 0;
                                             }
-                                        } while (opcaotonalidade < 1 || opcaotonalidade > 3);
-                                        if (opcaotonalidade == 1) {
-                                            mainMethods.getBulbWithCode(codigoDispositivo).setTonalidadeCold();
+                                        } while (opcaoBulb < 1 || opcaoBulb > 3);
+                                        if (opcaoBulb == 1) {
+                                            if (mainMethods.getDeviceWithCode(codigoDispositivo).isON()) {
+                                                mainMethods.addPedido(pedido -> {
+                                                    try {
+                                                        mainMethods.getDeviceWithCode(codigoDispositivo).setOFF();
+                                                        mainMethods.getBulbWithCode(codigoDispositivo).setconsumoDiarioBulb(0);
+                                                        System.out.println("Alteração realizada com sucesso!\n");
+                                                    } catch (Exception e) {
+                                                        System.out.println(e.getMessage());
+                                                    }
+                                                });
+
+                                            } else {
+                                                mainMethods.getDeviceWithCode(codigoDispositivo).setON();
+                                                System.out.println("Alteração realizada com sucesso!\n");
+
+                                            }
+                                        } else if (opcaoBulb == 2) {
+                                            int opcaotonalidade = 0;
+                                            do {
+                                                System.out.println("Insira a nova tonalidade\n" +
+                                                        "1 - Cold\n" +
+                                                        "2 - Neutral\n" +
+                                                        "3 - Warm\n");
+                                                try {
+                                                    opcaotonalidade = sc.nextInt();
+                                                } catch (Exception e) {
+                                                    System.out.println(
+                                                            "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
+                                                    opcaotonalidade = 0;
+                                                }
+                                            } while (opcaotonalidade < 1 || opcaotonalidade > 3);
+                                            if (opcaotonalidade == 1) {
+                                                mainMethods.getBulbWithCode(codigoDispositivo).setTonalidadeCold();
+                                                System.out.println("Alteração realizada com sucesso!\n");
+
+                                            } else if (opcaotonalidade == 2) {
+                                                mainMethods.getBulbWithCode(codigoDispositivo).setTonalidadeNeutral();
+                                                System.out.println("Alteração realizada com sucesso!\n");
+
+                                            } else if (opcaotonalidade == 3) {
+                                                mainMethods.getBulbWithCode(codigoDispositivo).setTonalidadeWarm();
+                                                System.out.println("Alteração realizada com sucesso!\n");
+
+                                            }
+                                        
+                                        } else {
+                                            System.out.println(
+                                                    "Insira o novo consumo diário(em KWh (com vírgula em caso de número decimal.))\n");
+                                            float consumo = sc.nextFloat();
+                                            mainMethods.getBulbWithCode(codigoDispositivo).setconsumoDiarioBulb(consumo);
                                             System.out.println("Alteração realizada com sucesso!\n");
 
-                                        } else if (opcaotonalidade == 2) {
-                                            mainMethods.getBulbWithCode(codigoDispositivo).setTonalidadeNeutral();
-                                            System.out.println("Alteração realizada com sucesso!\n");
-
-                                        } else if (opcaotonalidade == 3) {
-                                            mainMethods.getBulbWithCode(codigoDispositivo).setTonalidadeWarm();
-                                            System.out.println("Alteração realizada com sucesso!\n");
-
-                                        }
-                                    } else {
-                                        System.out.println(
-                                                "Insira o novo consumo diário(em KWh (com vírgula em caso de número decimal.))\n");
-                                        float consumo = sc.nextFloat();
-                                        mainMethods.getBulbWithCode(codigoDispositivo).setconsumoDiarioBulb(consumo);
-                                        System.out.println("Alteração realizada com sucesso!\n");
-
+                                       
+                                        }    
                                     }
+                                } catch (DevicesException e) {
+                                    System.out.println(e.getMessage());
                                 }
+                                    
                             } /**/else if (opcaoDispositivos == 2) { // CAMARA
                                 System.out.println(mainMethods.getDivisao(divisao).values().toString());
                                 int codigoDispositivo = 0;
@@ -486,7 +525,8 @@ public class Main {
                                     if (opcaoSpeaker == 1) { // Ligar ou desligar o speaker
                                         if (mainMethods.getDeviceWithCode(codigoDispositivo).isON()) {
                                             mainMethods.getDeviceWithCode(codigoDispositivo).setOFF();
-                                            mainMethods.getSpeakerWithCode(codigoDispositivo).setconsumoDiarioSpeaker(0);
+                                            mainMethods.getSpeakerWithCode(codigoDispositivo)
+                                                    .setconsumoDiarioSpeaker(0);
                                         } else {
                                             mainMethods.getDeviceWithCode(codigoDispositivo).setON();
                                             System.out.println("Alteração realizada com sucesso!\n");
@@ -529,11 +569,17 @@ public class Main {
                                 + mainMethods.getArt().getFornecedores());
                         int codigoFornecedorToChangeCasa = sc.nextInt();
                         if (mainMethods.existeFornecedoremArticulador(codigoFornecedorToChangeCasa)) {
-                            CasaInteligente ciTemp = mainMethods.getArt().getCasas().get(codigoCasaToChangeFornecedor);
-                            int codigoAntigoFornecedor = mainMethods.getFornecedorCodeFromCasa(ciTemp);
-                            mainMethods.getArt().getFornecedores().get(codigoAntigoFornecedor).getClientes()
-                                    .remove(codigoCasaToChangeFornecedor);
-                            mainMethods.getArt().getFornecedores().get(codigoFornecedorToChangeCasa).addCliente(ciTemp);
+                            try {
+                                mainMethods.addPedido(pedido -> {
+                                    CasaInteligente ciTemp = mainMethods.getArt().getCasas().get(codigoCasaToChangeFornecedor);
+                                    int codigoAntigoFornecedor = mainMethods.getFornecedorCodeFromCasa(ciTemp);
+                                    mainMethods.getArt().getFornecedores().get(codigoAntigoFornecedor).getClientes()
+                                            .remove(codigoCasaToChangeFornecedor);
+                                    mainMethods.getArt().getFornecedores().get(codigoFornecedorToChangeCasa).addCliente(ciTemp);
+                                });
+                            } catch (Exception e) {
+                                System.out.println(e.getMessage());
+                            }
                         } else {
                             System.out.println("O fornecedor que mencionou não existe.\n");
                         }

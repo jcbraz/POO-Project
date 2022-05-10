@@ -344,7 +344,7 @@ public class CasaInteligente {
      * @param device The device to be added to the division.
      */
     public void addDeviceToDivisao(String nomeDivisao, SmartDevices device) {
-        this.divisoes.get(nomeDivisao).put(device.getId(), device);
+        this.divisoes.get(nomeDivisao).put(device.getId(), device.clone());
     }
 
     /**

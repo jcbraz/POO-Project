@@ -1,4 +1,6 @@
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
@@ -8,6 +10,7 @@ public class Articulador {
     private Map<Integer, CasaInteligente> casas;
     private Map<Integer, Fornecedor> fornecedores;
     private Map<Integer, Fatura> faturas;
+
 
     // It's the constructor of the class Articulador.
     public Articulador() {
@@ -21,10 +24,12 @@ public class Articulador {
         setCasas(ci.getCasas());
         setFornecedores(ci.getFornecedores());
         setFaturas(ci.getFaturas());
+        setPedidos(ci.getPedidos());
     }
 
     /**
-     * Return a map of all the houses in the city, where the key is the house's ID and the value is the
+     * Return a map of all the houses in the city, where the key is the house's ID
+     * and the value is the
      * house itself.
      * 
      * @return A copy of the map.
@@ -34,7 +39,8 @@ public class Articulador {
     }
 
     /**
-     * Return a map of all the entries in the fornecedores map, where the key is the key of the entry
+     * Return a map of all the entries in the fornecedores map, where the key is the
+     * key of the entry
      * and the value is the value of the entry.
      * 
      * @return A map with the key and value of the fornecedores map.
@@ -44,7 +50,8 @@ public class Articulador {
     }
 
     /**
-     * Return a map of all the invoices, where the key is the invoice id and the value is the invoice
+     * Return a map of all the invoices, where the key is the invoice id and the
+     * value is the invoice
      * itself.
      * 
      * @return A copy of the map.
@@ -53,27 +60,33 @@ public class Articulador {
         return this.faturas.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
+
     /**
-     * > This function sets the value of the variable `casas` to the value of the parameter `casas`
+     * > This function sets the value of the variable `casas` to the value of the
+     * parameter `casas`
      * 
-     * @param casas A map of all the houses in the system. The key is the house's ID.
+     * @param casas A map of all the houses in the system. The key is the house's
+     *              ID.
      */
     public void setCasas(Map<Integer, CasaInteligente> casas) {
         this.casas = casas;
     }
 
     /**
-     * It sets the value of the fornecedores attribute to the value of the fornecedores parameter
+     * It sets the value of the fornecedores attribute to the value of the
+     * fornecedores parameter
      * 
-     * @param fornecedores A map of fornecedores, where the key is the fornecedor's ID and the value is
-     * the fornecedor itself.
+     * @param fornecedores A map of fornecedores, where the key is the fornecedor's
+     *                     ID and the value is
+     *                     the fornecedor itself.
      */
     public void setFornecedores(Map<Integer, Fornecedor> fornecedores) {
         this.fornecedores = fornecedores;
     }
 
     /**
-     * It sets the value of the faturas attribute to the value of the faturas parameter
+     * It sets the value of the faturas attribute to the value of the faturas
+     * parameter
      * 
      * @param faturas A map of all the invoices that are in the system.
      */
@@ -81,8 +94,13 @@ public class Articulador {
         this.faturas = faturas;
     }
 
+    public void setPedidos(ArrayDeque<Consumer> pedidos) {
+        this.pedidos = pedidos;
+    }
+
     /**
-     * The function returns a string that contains the values of the variables casas, fornecedores and
+     * The function returns a string that contains the values of the variables
+     * casas, fornecedores and
      * faturas
      * 
      * @return The toString method is being returned.
@@ -96,7 +114,8 @@ public class Articulador {
     }
 
     /**
-     * If the object is the same object, or if the object is not null and is of the same class, then
+     * If the object is the same object, or if the object is not null and is of the
+     * same class, then
      * check if the fields are equal
      * 
      * @param o the object to compare to
@@ -114,7 +133,8 @@ public class Articulador {
     }
 
     /**
-     * This function returns a new Articulador object that is a copy of the Articulador object that
+     * This function returns a new Articulador object that is a copy of the
+     * Articulador object that
      * called this function.
      * 
      * @return A new Articulador object with the same values as the original.
@@ -126,10 +146,11 @@ public class Articulador {
     /**
      * It adds a supplier to the list of suppliers
      * 
-     * @param fornecedor The fornecedor object to be added to the fornecedores HashMap.
+     * @param fornecedor The fornecedor object to be added to the fornecedores
+     *                   HashMap.
      */
     public void addFornecedor(Fornecedor fornecedor) {
-        this.fornecedores.put(fornecedor.getCode(), fornecedor);
+        this.fornecedores.put(fornecedor.getCode(), fornecedor.clone());
     }
 
     /**
@@ -152,7 +173,8 @@ public class Articulador {
     }
 
     /**
-     * > This function returns true if the house with the given code exists in the system
+     * > This function returns true if the house with the given code exists in the
+     * system
      * 
      * @param codigoCasa The code of the house.
      * @return A boolean value.
@@ -176,7 +198,7 @@ public class Articulador {
      * @param f Fatura object
      */
     public void addFaturaToMap(Fatura f) {
-        this.faturas.put(f.getCode(), f);
-    }
+        this.faturas.put(f.getCode(), f.clone());
+    } 
 
 }
