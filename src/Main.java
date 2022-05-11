@@ -99,13 +99,9 @@ public class Main {
                         mainMethods.criaDivisao("Quarto", new HashMap<Integer, SmartDevices>());
                         mainMethods.criaDivisao("Cozinha", new HashMap<Integer, SmartDevices>());
                         mainMethods.criaDivisao("Casa de Banho", new HashMap<Integer, SmartDevices>());
-                        try {
-                            System.out.println("Insira a divisão que pretende selecionar/criar.\n"
-                                    + "As divisões disponíveis até ao momentos são: \n"
-                                    + mainMethods.getCiWithCode(codigoCasa).getDivisoes());
-                        } catch (CasaInexistenteException e) {
-                            System.out.println(e.getMessage());
-                        }
+                        System.out.println("Insira a divisão que pretende selecionar/criar.\n"
+                                + "As divisões disponíveis até ao momentos são: \n"
+                                + mainMethods.getArt().getCasas().get(codigoCasa).getDivisoes());
                         sc.nextLine();
                         String divisao = sc.nextLine();
                         int resposta = 0;
@@ -170,9 +166,12 @@ public class Main {
                                 do {
                                     System.out.println("Indique a resolução que pretende\n" +
                                             "1 - 640 x 480\n" +
-                                            "2 - 1280 x 720\n" +
-                                            "3 - 1920 x 1080\n" +
-                                            "4 - 3840 x 2160\n");
+                                            "2 - 1024 x 768\n" +
+                                            "3 - 1280 x 768\n" +
+                                            "4 - 1366 x 768\n" +
+                                            "5 - 1920 x 1080\n" +
+                                            "6 - 2160 x 1440\n" +
+                                            "7 - 3840 x 2160\n");
                                     try {
                                         opcaoCameraResolucao = sc.nextInt();
                                     } catch (Exception e) {
@@ -180,17 +179,26 @@ public class Main {
                                                 "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
                                         opcaoCameraResolucao = 0;
                                     }
-                                } while (opcaoCameraResolucao < 1 || opcaoCameraResolucao > 4);
+                                } while (opcaoCameraResolucao < 1 || opcaoCameraResolucao > 7);
                                 if (opcao == 1) {
                                     x = 640;
                                     y = 480;
                                 } else if (opcao == 2) {
-                                    x = 1280;
-                                    y = 720;
+                                    x = 1024;
+                                    y = 768;
                                 } else if (opcao == 3) {
+                                    x = 1280;
+                                    y = 768;
+                                } else if (opcao == 4) {
+                                    x = 1366;
+                                    y = 768;
+                                } else if (opcao == 5) {
                                     x = 1920;
                                     y = 1080;
-                                } else if (opcao == 4) {
+                                } else if (opcao == 6) {
+                                    x = 2160;
+                                    y = 1440;
+                                } else if (opcao == 7) {
                                     x = 3840;
                                     y = 2160;
                                 }
@@ -260,8 +268,8 @@ public class Main {
                                     }
                                 });
                             });
-                            } catch (Exception e) {
-                                System.out.println(e.getMessage());
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
                         }
                     }
                     break;
@@ -311,102 +319,136 @@ public class Main {
                                     System.out.println("Insira o código do dispositivo a alterar:\n");
                                     try {
                                         codigoDispositivo = sc.nextInt();
+                                        mainMethods.setCodeDispositivo(codigoDispositivo);
                                     } catch (Exception e) {
                                         System.out.println(
                                                 "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
                                         opcaoDispositivos = 0;
                                     }
                                 } while (!mainMethods.existeDispositivo(codigoDispositivo));
-                                try {
-                                    if (mainMethods.getDeviceWithCode(codigoDispositivo).isBulb()) {
-                                        int opcaoBulb = 0;
-                                        do {
-                                            System.out.println("O que pretende alterar?\n" +
-                                                    "1 - Ligar/Desligar a lâmpada\n" +
-                                                    "2 - Alterar a tonalidade\n" +
-                                                    "3 - Alterar o consumo diário\n");
+                                if (mainMethods.getDeviceWithCode(codigoDispositivo).isBulb()) {
+                                    int opcaoBulb = 0;
+                                    do {
+                                        System.out.println("O que pretende alterar?\n" +
+                                                "1 - Ligar/Desligar a lâmpada\n" +
+                                                "2 - Alterar a tonalidade\n" +
+                                                "3 - Alterar o consumo diário\n");
+                                        try {
+                                            opcaoBulb = sc.nextInt();
+                                        } catch (Exception e) {
+                                            System.out.println(
+                                                    "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
+                                            opcaoBulb = 0;
+                                        }
+                                    } while (opcaoBulb < 1 || opcaoBulb > 3);
+                                    if (opcaoBulb == 1) {
+                                        if (mainMethods.getDeviceWithCode(codigoDispositivo).isON()) {
                                             try {
-                                                opcaoBulb = sc.nextInt();
+                                                mainMethods.addPedido(pedido -> {
+                                                    mainMethods.getDeviceWithCode(mainMethods.getCodeDispositivo())
+                                                            .setOFF();
+                                                    mainMethods.getBulbWithCode(mainMethods.getCodeDispositivo())
+                                                            .setconsumoDiarioBulb(0);
+                                                    System.out.println("Alteração realizada com sucesso!\n");
+                                                });
+                                            } catch (Exception e) {
+                                                System.out.println(e.getMessage());
+                                            }
+                                            System.out.println("Pedido adicionado à lista de espera");
+                                        } else {
+                                            try {
+                                                mainMethods.addPedido(pedido -> {
+                                                    mainMethods.getDeviceWithCode(mainMethods.getCodeDispositivo())
+                                                            .setON();
+                                                    System.out.println("Alteração realizada com sucesso!\n");
+                                                });
+                                            } catch (Exception e) {
+                                                System.out.println(e.getMessage());
+                                            }
+                                            System.out.println("Pedido adicionado à lista de espera");
+                                        }
+                                    } else if (opcaoBulb == 2) {
+                                        int opcaotonalidade = 0;
+                                        do {
+                                            System.out.println("Insira a nova tonalidade\n" +
+                                                    "1 - Cold\n" +
+                                                    "2 - Neutral\n" +
+                                                    "3 - Warm\n");
+                                            try {
+                                                opcaotonalidade = sc.nextInt();
                                             } catch (Exception e) {
                                                 System.out.println(
                                                         "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
-                                                opcaoBulb = 0;
+                                                opcaotonalidade = 0;
                                             }
-                                        } while (opcaoBulb < 1 || opcaoBulb > 3);
-                                        if (opcaoBulb == 1) {
-                                            if (mainMethods.getDeviceWithCode(codigoDispositivo).isON()) {
+                                        } while (opcaotonalidade < 1 || opcaotonalidade > 3);
+                                        if (opcaotonalidade == 1) {
+                                            try {
                                                 mainMethods.addPedido(pedido -> {
-                                                    try {
-                                                        mainMethods.getDeviceWithCode(codigoDispositivo).setOFF();
-                                                        mainMethods.getBulbWithCode(codigoDispositivo).setconsumoDiarioBulb(0);
-                                                        System.out.println("Alteração realizada com sucesso!\n");
-                                                    } catch (Exception e) {
-                                                        System.out.println(e.getMessage());
-                                                    }
+                                                    mainMethods.getBulbWithCode(mainMethods.getCodeDispositivo())
+                                                            .setTonalidadeCold();
+                                                    System.out.println("Alteração realizada com sucesso!\n");
                                                 });
-
-                                            } else {
-                                                mainMethods.getDeviceWithCode(codigoDispositivo).setON();
-                                                System.out.println("Alteração realizada com sucesso!\n");
-
+                                            } catch (Exception e) {
+                                                System.out.println(e.getMessage());
                                             }
-                                        } else if (opcaoBulb == 2) {
-                                            int opcaotonalidade = 0;
-                                            do {
-                                                System.out.println("Insira a nova tonalidade\n" +
-                                                        "1 - Cold\n" +
-                                                        "2 - Neutral\n" +
-                                                        "3 - Warm\n");
-                                                try {
-                                                    opcaotonalidade = sc.nextInt();
-                                                } catch (Exception e) {
-                                                    System.out.println(
-                                                            "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
-                                                    opcaotonalidade = 0;
-                                                }
-                                            } while (opcaotonalidade < 1 || opcaotonalidade > 3);
-                                            if (opcaotonalidade == 1) {
-                                                mainMethods.getBulbWithCode(codigoDispositivo).setTonalidadeCold();
-                                                System.out.println("Alteração realizada com sucesso!\n");
-
-                                            } else if (opcaotonalidade == 2) {
-                                                mainMethods.getBulbWithCode(codigoDispositivo).setTonalidadeNeutral();
-                                                System.out.println("Alteração realizada com sucesso!\n");
-
-                                            } else if (opcaotonalidade == 3) {
-                                                mainMethods.getBulbWithCode(codigoDispositivo).setTonalidadeWarm();
-                                                System.out.println("Alteração realizada com sucesso!\n");
-
+                                            System.out.println("Pedido adicionado à lista de espera");
+                                        } else if (opcaotonalidade == 2) {
+                                            try {
+                                                mainMethods.addPedido(pedido -> {
+                                                    mainMethods.getBulbWithCode(mainMethods.getCodeDispositivo())
+                                                            .setTonalidadeNeutral();
+                                                    System.out.println("Alteração realizada com sucesso!\n");
+                                                });
+                                            } catch (Exception e) {
+                                                System.out.println(e.getMessage());
                                             }
-                                        
-                                        } else {
-                                            System.out.println(
-                                                    "Insira o novo consumo diário(em KWh (com vírgula em caso de número decimal.))\n");
-                                            float consumo = sc.nextFloat();
-                                            mainMethods.getBulbWithCode(codigoDispositivo).setconsumoDiarioBulb(consumo);
-                                            System.out.println("Alteração realizada com sucesso!\n");
-
-                                       
-                                        }    
+                                            System.out.println("Pedido adicionado à lista de espera");
+                                        } else if (opcaotonalidade == 3) {
+                                            try {
+                                                mainMethods.addPedido(pedido -> {
+                                                    mainMethods.getBulbWithCode(mainMethods.getCodeDispositivo())
+                                                            .setTonalidadeWarm();
+                                                    System.out.println("Alteração realizada com sucesso!\n");
+                                                });
+                                            } catch (Exception e) {
+                                                System.out.println(e.getMessage());
+                                            }
+                                            System.out.println("Pedido adicionado à lista de espera");
+                                        }
+                                    } else {
+                                        System.out.println(
+                                                "Insira o novo consumo diário(em KWh (com vírgula em caso de número decimal.))\n");
+                                        float consumo = sc.nextFloat();
+                                        try {
+                                            mainMethods.addPedido(pedido -> {
+                                                mainMethods.getBulbWithCode(mainMethods.getCodeDispositivo())
+                                                        .setconsumoDiarioBulb(consumo);
+                                                System.out.println("Alteração realizada com sucesso!\n");
+                                            });
+                                        } catch (Exception e) {
+                                            System.out.println(e.getMessage());
+                                        }
                                     }
-                                } catch (DevicesException e) {
+                                }
+                            } /**/else if (opcaoDispositivos == 2) { // CAMARA
+                                try {
+                                    System.out.println(mainMethods.getDivisao(divisao).values().toString());
+                                } catch (DivisoesException e) {
                                     System.out.println(e.getMessage());
                                 }
-                                    
-                            } /**/else if (opcaoDispositivos == 2) { // CAMARA
-                                System.out.println(mainMethods.getDivisao(divisao).values().toString());
                                 int codigoDispositivo = 0;
                                 do {
                                     System.out.println("Insira o código do dispositivo a alterar:\n");
                                     try {
                                         codigoDispositivo = sc.nextInt();
+                                        mainMethods.setCodeDispositivo(codigoDispositivo);
                                     } catch (Exception e) {
                                         System.out.println(
                                                 "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
                                         opcaoDispositivos = 0;
                                     }
                                 } while (!mainMethods.existeDispositivo(codigoDispositivo));
-
                                 if (mainMethods.getDeviceWithCode(codigoDispositivo).isCamera()) {
                                     int opcaoCamera = 0;
                                     do {
@@ -423,24 +465,44 @@ public class Main {
                                             opcaoCamera = 0;
                                         }
                                     } while (opcaoCamera < 1 || opcaoCamera > 3);
-                                    if (opcaoCamera == 1) { // Ligar ou desligar a camera
+                                    if (opcaoCamera == 1) {
+                                        // Ligar ou desligar a camera
                                         if (mainMethods.getDeviceWithCode(codigoDispositivo).isON()) {
-                                            mainMethods.getDeviceWithCode(codigoDispositivo).setOFF();
-                                            mainMethods.getCameraWithCode(codigoDispositivo).setConsumoDiarioCamera(0);
-                                            System.out.println("Alteração realizada com sucesso!\n");
+                                            try {
+                                                mainMethods.addPedido(pedido -> {
+                                                    mainMethods.getDeviceWithCode(mainMethods.getCodeDispositivo())
+                                                            .setOFF();
+                                                    mainMethods.getCameraWithCode(mainMethods.getCodeDispositivo())
+                                                            .setConsumoDiarioCamera(0);
+                                                    System.out.println("Alteração realizada com sucesso!\n");
+                                                });
+                                            } catch (Exception e) {
+                                                System.out.println(e.getMessage());
+                                            }
+                                            System.out.println("Pedido adicionado à lista de espera");
                                         } else {
-                                            mainMethods.getDeviceWithCode(codigoDispositivo).setON();
-                                            System.out.println("Alteração realizada com sucesso!\n");
-
+                                            try {
+                                                mainMethods.addPedido(pedido -> {
+                                                    mainMethods.getDeviceWithCode(mainMethods.getCodeDispositivo())
+                                                            .setON();
+                                                    System.out.println("Alteração realizada com sucesso!\n");
+                                                });
+                                            } catch (Exception e) {
+                                                System.out.println(e.getMessage());
+                                            }
+                                            System.out.println("Pedido adicionado à lista de espera");
                                         }
                                     } else if (opcaoCamera == 2) { // Alterar a resolução
                                         int opcaoCameraRes = 0;
                                         do {
                                             System.out.println("Indique a resolução que pretende\n" +
                                                     "1 - 640 x 480\n" +
-                                                    "2 - 1280 x 720\n" +
-                                                    "3 - 1920 x 1080\n" +
-                                                    "4 - 3840 x 2160\n");
+                                                    "2 - 1024 x 768\n" +
+                                                    "3 - 1280 x 768\n" +
+                                                    "4 - 1366 x 768\n" +
+                                                    "5 - 1920 x 1080\n" +
+                                                    "6 - 2160 x 1440\n" +
+                                                    "7 - 3840 x 2160\n");
                                             try {
                                                 opcaoCameraRes = sc.nextInt();
                                             } catch (Exception e) {
@@ -448,58 +510,140 @@ public class Main {
                                                         "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
                                                 opcaoCameraRes = 0;
                                             }
-                                        } while (opcaoCameraRes < 1 || opcaoCameraRes > 4);
+                                        } while (opcaoCameraRes < 1 || opcaoCameraRes > 7);
                                         if (opcaoCameraRes == 1) {
-                                            mainMethods.getCameraWithCode(codigoDispositivo).setResolution_x(640);
-                                            mainMethods.getCameraWithCode(codigoDispositivo).setResolution_y(480);
-                                            System.out.println("Alteração realizada com sucesso!\n");
-
+                                            try {
+                                                mainMethods.addPedido(pedido -> {
+                                                    mainMethods.getCameraWithCode(mainMethods.getCodeDispositivo())
+                                                            .setResolution_x(640);
+                                                    mainMethods.getCameraWithCode(mainMethods.getCodeDispositivo())
+                                                            .setResolution_y(480);
+                                                    System.out.println("Alteração realizada com sucesso!\n");
+                                                });
+                                            } catch (Exception e) {
+                                                System.out.println(e.getMessage());
+                                            }
+                                            System.out.println("Pedido adicionado à lista de espera");
                                         } else if (opcaoCameraRes == 2) {
-                                            mainMethods.getCameraWithCode(codigoDispositivo).setResolution_x(1280);
-                                            System.out.println("Alteração realizada com sucesso!\n");
-
-                                            ;
-                                            mainMethods.getCameraWithCode(codigoDispositivo).setResolution_y(720);
-                                            System.out.println("Alteração realizada com sucesso!\n");
-
+                                            try {
+                                                mainMethods.addPedido(pedido -> {
+                                                    mainMethods.getCameraWithCode(mainMethods.getCodeDispositivo())
+                                                            .setResolution_x(1024);
+                                                    mainMethods.getCameraWithCode(mainMethods.getCodeDispositivo())
+                                                            .setResolution_y(768);
+                                                    System.out.println("Alteração realizada com sucesso!\n");
+                                                });
+                                            } catch (Exception e) {
+                                                System.out.println(e.getMessage());
+                                            }
+                                            System.out.println("Pedido adicionado à lista de espera");
                                         } else if (opcaoCameraRes == 3) {
-                                            mainMethods.getCameraWithCode(codigoDispositivo).setResolution_x(1920);
-                                            mainMethods.getCameraWithCode(codigoDispositivo).setResolution_y(1080);
-                                            System.out.println("Alteração realizada com sucesso!\n");
-
+                                            try {
+                                                mainMethods.addPedido(pedido -> {
+                                                    mainMethods.getCameraWithCode(mainMethods.getCodeDispositivo())
+                                                            .setResolution_x(1280);
+                                                    mainMethods.getCameraWithCode(mainMethods.getCodeDispositivo())
+                                                            .setResolution_y(768);
+                                                    System.out.println("Alteração realizada com sucesso!\n");
+                                                });
+                                            } catch (Exception e) {
+                                                System.out.println(e.getMessage());
+                                            }
+                                            System.out.println("Pedido adicionado à lista de espera");
                                         } else if (opcaoCameraRes == 4) {
-                                            mainMethods.getCameraWithCode(codigoDispositivo).setResolution_x(3840);
-                                            mainMethods.getCameraWithCode(codigoDispositivo).setResolution_y(2160);
-                                            System.out.println("Alteração realizada com sucesso!\n");
-
+                                            try {
+                                                mainMethods.addPedido(pedido -> {
+                                                    mainMethods.getCameraWithCode(mainMethods.getCodeDispositivo())
+                                                            .setResolution_x(1366);
+                                                    mainMethods.getCameraWithCode(mainMethods.getCodeDispositivo())
+                                                            .setResolution_y(768);
+                                                    System.out.println("Alteração realizada com sucesso!\n");
+                                                });
+                                            } catch (Exception e) {
+                                                System.out.println(e.getMessage());
+                                            }
+                                            System.out.println("Pedido adicionado à lista de espera");
+                                        } else if (opcaoCamera == 5) {
+                                            try {
+                                                mainMethods.addPedido(pedido -> {
+                                                    mainMethods.getCameraWithCode(mainMethods.getCodeDispositivo())
+                                                            .setResolution_x(1920);
+                                                    mainMethods.getCameraWithCode(mainMethods.getCodeDispositivo())
+                                                            .setResolution_y(1080);
+                                                    System.out.println("Alteração realizada com sucesso!\n");
+                                                });
+                                            } catch (Exception e) {
+                                                System.out.println(e.getMessage());
+                                            }
+                                            System.out.println("Pedido adicionado à lista de espera");
+                                        } else if (opcaoCamera == 6) {
+                                            try {
+                                                mainMethods.addPedido(pedido -> {
+                                                    mainMethods.getCameraWithCode(mainMethods.getCodeDispositivo())
+                                                            .setResolution_x(2160);
+                                                    mainMethods.getCameraWithCode(mainMethods.getCodeDispositivo())
+                                                            .setResolution_y(1440);
+                                                    System.out.println("Alteração realizada com sucesso!\n");
+                                                });
+                                            } catch (Exception e) {
+                                                System.out.println(e.getMessage());
+                                            }
+                                            System.out.println("Pedido adicionado à lista de espera");
+                                        } else if (opcaoCamera == 7) {
+                                            try {
+                                                mainMethods.addPedido(pedido -> {
+                                                    mainMethods.getCameraWithCode(mainMethods.getCodeDispositivo())
+                                                            .setResolution_x(3840);
+                                                    mainMethods.getCameraWithCode(mainMethods.getCodeDispositivo())
+                                                            .setResolution_y(2160);
+                                                    System.out.println("Alteração realizada com sucesso!\n");
+                                                });
+                                            } catch (Exception e) {
+                                                System.out.println(e.getMessage());
+                                            }
+                                            System.out.println("Pedido adicionado à lista de espera");
                                         }
-
                                     } else if (opcaoCamera == 3) {
                                         System.out
                                                 .println("Insira o tamanho que pretende que o ficheiro tenha em GB\n");
                                         double filesize = sc.nextDouble();
-                                        mainMethods.getCameraWithCode(codigoDispositivo).setFilesize(filesize);
-                                        System.out.println("Alteração realizada com sucesso!\n");
-
+                                        try {
+                                            mainMethods.addPedido(pedido -> {
+                                                mainMethods.getCameraWithCode(mainMethods.getCodeDispositivo())
+                                                        .setFilesize(filesize);
+                                                System.out.println("Alteração realizada com sucesso!\n");
+                                            });
+                                        } catch (Exception e) {
+                                            System.out.println(e.getMessage());
+                                        }
                                     } else {
                                         System.out.println(
                                                 "Insira o novo consumo diário (em KWh (com vírgula em caso de número decimal.))\n");
                                         float consumo = sc.nextFloat();
-                                        mainMethods.getCameraWithCode(codigoDispositivo)
-                                                .setConsumoDiarioCamera(consumo); // consumo em KWh
-                                        System.out.println("Alteração realizada com sucesso!\n");
-                                        System.out.println("Alteração realizada com sucesso!\n");
-
+                                        try {
+                                            mainMethods.addPedido(pedido -> {
+                                                mainMethods.getCameraWithCode(mainMethods.getCodeDispositivo())
+                                                        .setConsumoDiarioCamera(consumo); // consumo em KWh
+                                                System.out.println("Alteração realizada com sucesso!\n");
+                                                System.out.println("Alteração realizada com sucesso!\n");
+                                            });
+                                        } catch (Exception e) {
+                                            System.out.println(e.getMessage());
+                                        }
                                     }
-
                                 }
                             } /**/else if (opcaoDispositivos == 3) { // SPEAKER
-                                System.out.println(mainMethods.getDivisao(divisao).values().toString());
+                                try {
+                                    System.out.println(mainMethods.getDivisao(divisao).values().toString());
+                                } catch (Exception e) {
+                                    System.out.println("Não existem dispositivos na divisão selecionada.\n");
+                                }
                                 int codigoDispositivo = 0;
                                 do {
                                     System.out.println("Insira o código do dispositivo a alterar:\n");
                                     try {
                                         codigoDispositivo = sc.nextInt();
+                                        mainMethods.setCodeDispositivo(codigoDispositivo);
                                     } catch (Exception e) {
                                         System.out.println(
                                                 "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
@@ -524,34 +668,65 @@ public class Main {
                                     } while (opcaoSpeaker < 1 || opcaoSpeaker > 4);
                                     if (opcaoSpeaker == 1) { // Ligar ou desligar o speaker
                                         if (mainMethods.getDeviceWithCode(codigoDispositivo).isON()) {
-                                            mainMethods.getDeviceWithCode(codigoDispositivo).setOFF();
-                                            mainMethods.getSpeakerWithCode(codigoDispositivo)
-                                                    .setconsumoDiarioSpeaker(0);
+                                            try {
+                                                mainMethods.addPedido(pedido -> {
+                                                    mainMethods.getDeviceWithCode(mainMethods.getCodeDispositivo())
+                                                            .setOFF();
+                                                    mainMethods.getSpeakerWithCode(mainMethods.getCodeDispositivo())
+                                                            .setconsumoDiarioSpeaker(0);
+                                                });
+                                            } catch (Exception e) {
+                                                System.out.println(e.getMessage());
+                                            }
+                                            System.out.println("Pedido adicionado à lista de espera");
                                         } else {
-                                            mainMethods.getDeviceWithCode(codigoDispositivo).setON();
-                                            System.out.println("Alteração realizada com sucesso!\n");
+                                            try {
+                                                mainMethods.addPedido(pedido -> {
+                                                    mainMethods.getDeviceWithCode(mainMethods.getCodeDispositivo())
+                                                            .setON();
+                                                    System.out.println("Alteração realizada com sucesso!\n");
+                                                });
+                                            } catch (Exception e) {
+                                                System.out.println(e.getMessage());
+                                            }
+                                            System.out.println("Pedido adicionado à lista de espera");
                                         }
                                     } else if (opcaoSpeaker == 2) {
                                         System.out.println("Insira a rádio que deseja ouvir\n");
                                         String nomeRadio = sc.next();
-                                        mainMethods.getSpeakerWithCode(codigoDispositivo)
-                                                .setNomeRadio(nomeRadio);
-                                        ;
+                                        try {
+                                            mainMethods.addPedido(pedido -> {
+                                                mainMethods.getSpeakerWithCode(mainMethods.getCodeDispositivo())
+                                                        .setNomeRadio(nomeRadio);
+                                            });
+                                        } catch (Exception e) {
+                                            System.out.println(e.getMessage());
+                                        }
                                     } else if (opcaoSpeaker == 3) {
                                         System.out.println("Insira o volume que deseja\n");
                                         int volume = sc.nextInt();
-                                        mainMethods.getSpeakerWithCode(codigoDispositivo)
-                                                .setVolume(volume); // consumo em KWh
-                                        System.out.println("Alteração realizada com sucesso!\n");
-
+                                        try {
+                                            mainMethods.addPedido(pedido -> {
+                                                mainMethods.getSpeakerWithCode(mainMethods.getCodeDispositivo())
+                                                        .setVolume(volume); // consumo em KWh
+                                                System.out.println("Alteração realizada com sucesso!\n");
+                                            });
+                                        } catch (Exception e) {
+                                            System.out.println(e.getMessage());
+                                        }
                                     } else {
                                         System.out.println(
                                                 "Insira o novo consumo diário (em KWh (com vírgula em caso de número decimal.))\n");
                                         float consumo = sc.nextFloat();
-                                        mainMethods.getSpeakerWithCode(codigoDispositivo)
-                                                .setconsumoDiarioSpeaker(consumo); // consumo em KWh
-                                        System.out.println("Alteração realizada com sucesso!\n");
-
+                                        try {
+                                            mainMethods.addPedido(pedido -> {
+                                                mainMethods.getSpeakerWithCode(mainMethods.getCodeDispositivo())
+                                                        .setconsumoDiarioSpeaker(consumo); // consumo em KWh
+                                                System.out.println("Alteração realizada com sucesso!\n");
+                                            });
+                                        } catch (Exception e) {
+                                            System.out.println(e.getMessage());
+                                        }
                                     }
                                 }
                             }
@@ -571,11 +746,13 @@ public class Main {
                         if (mainMethods.existeFornecedoremArticulador(codigoFornecedorToChangeCasa)) {
                             try {
                                 mainMethods.addPedido(pedido -> {
-                                    CasaInteligente ciTemp = mainMethods.getArt().getCasas().get(codigoCasaToChangeFornecedor);
+                                    CasaInteligente ciTemp = mainMethods.getArt().getCasas()
+                                            .get(codigoCasaToChangeFornecedor);
                                     int codigoAntigoFornecedor = mainMethods.getFornecedorCodeFromCasa(ciTemp);
                                     mainMethods.getArt().getFornecedores().get(codigoAntigoFornecedor).getClientes()
                                             .remove(codigoCasaToChangeFornecedor);
-                                    mainMethods.getArt().getFornecedores().get(codigoFornecedorToChangeCasa).addCliente(ciTemp);
+                                    mainMethods.getArt().getFornecedores().get(codigoFornecedorToChangeCasa)
+                                            .addCliente(ciTemp);
                                 });
                             } catch (Exception e) {
                                 System.out.println(e.getMessage());
@@ -588,7 +765,7 @@ public class Main {
                     }
                     break;
                 case 8:
-                    System.out.println("\nInsira a data para a qual pretende avançar\n");
+                    System.out.println("\nInsira a data para a qual pretende avançar (AAAA-MM-DD)\n");
                     LocalDate dateToAdvance;
                     do {
                         try {
@@ -623,6 +800,13 @@ public class Main {
                                         forneceperna.precoTotalDiarioCliente(casebre.getCode()), casebre.getCode());
                             }
                         }
+                    }
+                    try {
+                        mainMethods.execPedidos();
+                        System.out.println(
+                                "Pendidos pendentes foram executados e os dados foram atualizados com sucesso.\n");
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
                     }
                     break;
                 default:
@@ -741,8 +925,8 @@ public class Main {
                             }
                         }
                     } else if (opcaoForStat == 4) {
-                        System.out.println(
-                                "O rank de maior consumo de energia é:\n" + mainMethods.rankCasasComMaiorConsumo());
+                        // System.out.println(
+                                // "O rank de maior consumo de energia é:\n" + mainMethods.rankCasasComMaiorConsumo());
                     }
                     break;
             }
