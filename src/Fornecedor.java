@@ -2,6 +2,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class Fornecedor {
     private static int counter = 0;
@@ -11,7 +12,6 @@ public class Fornecedor {
     private final double tax = 1.06; // taxa de IVA
     private ArrayList<Integer> codigosFaturas;
     private HashMap<Integer, CasaInteligente> clientes;
-
 
     // It's a constructor.
     public Fornecedor() {
@@ -39,12 +39,13 @@ public class Fornecedor {
     }
 
     /**
-     * This function returns an ArrayList of Integers that contains the codes of the invoices.
+     * This function returns an ArrayList of Integers that contains the codes of the
+     * invoices.
      * 
      * @return The method returns an ArrayList of Integers.
      */
     public ArrayList<Integer> getCodigosDeFaturas() {
-        return this.codigosFaturas;
+        return this.codigosFaturas.stream().collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -79,7 +80,7 @@ public class Fornecedor {
      * 
      * @param code The code to be returned to the client.
      */
-    public void SetCode(int code) {
+    public void setCode(int code) {
         this.code = code;
     }
 
@@ -97,7 +98,8 @@ public class Fornecedor {
     }
 
     /**
-     * This function returns a new object that is a copy of the object that called the function.
+     * This function returns a new object that is a copy of the object that called
+     * the function.
      * 
      * @return A new object of type Fornecedor with the same name as the original.
      */
@@ -151,23 +153,26 @@ public class Fornecedor {
     }
 
     /**
-     * It creates a new invoice for a client, given the client's NIF, the start and end dates of the
-     * invoice, the total energy consumption of the client's house, the total cost of the invoice, and
+     * It creates a new invoice for a client, given the client's NIF, the start and
+     * end dates of the
+     * invoice, the total energy consumption of the client's house, the total cost
+     * of the invoice, and
      * the code of the client's house
      * 
      * @param nifCliente the client's NIF
      * @param dateinicio the start date of the bill
-     * @param datefim end date of the invoice
-     * @param consumo the total energy consumption of the client's house
-     * @param custo the cost of the energy consumed by the client
+     * @param datefim    end date of the invoice
+     * @param consumo    the total energy consumption of the client's house
+     * @param custo      the cost of the energy consumed by the client
      * @param codigoCasa the code of the house
      * @return A new Fatura object is being returned.
      */
-    public Fatura criaFatura(int nifCliente, LocalDate dateinicio, LocalDate datefim, double consumo, double custo, int codigoCasa) {
+    public Fatura criaFatura(int nifCliente, LocalDate dateinicio, LocalDate datefim, double consumo, double custo,
+            int codigoCasa) {
         double consumoTotal = this.clientes.values().stream().mapToDouble(c -> c.energiaTotalDiariaCasa()).sum();
         int days = (int) ChronoUnit.DAYS.between(dateinicio, datefim);
         double custoTotal = this.precoTotalDiarioCliente(code) * days;
-        return new Fatura(dateinicio, datefim,code, nifCliente, consumoTotal, custoTotal, codigoCasa);
+        return new Fatura(dateinicio, datefim, code, nifCliente, consumoTotal, custoTotal, codigoCasa);
     }
 
     /**
@@ -181,7 +186,8 @@ public class Fornecedor {
     }
 
     /**
-     * It calculates the total amount of money that the company has to pay to the suppliers
+     * It calculates the total amount of money that the company has to pay to the
+     * suppliers
      * 
      * @return The total value of the energy consumed by all houses.
      */

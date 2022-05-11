@@ -1,6 +1,6 @@
 import java.time.LocalDate;
 
-public class Fatura implements Comparable<Fatura> {
+public class Fatura {
 
     // Declaring the variables that will be used in the class.
     private static int counter = 0;
@@ -183,7 +183,7 @@ public class Fatura implements Comparable<Fatura> {
         this.code = code;
     }
 
-    /**
+    /** 
      * It returns a new object with the same attributes as the object it was called on
      * 
      * @return A new Fatura object with the same attributes as the original.
@@ -192,15 +192,5 @@ public class Fatura implements Comparable<Fatura> {
         return new Fatura(this.dataInicio, this.dataFim, this.codefornecedor, this.nifCliente, this.consumo, this.custo, this.codigoCasa);
     }
 
-    /**
-     * The compareTo() method returns a negative integer, zero, or a positive integer as this object is
-     * less than, equal to, or greater than the specified object
-     * 
-     * @param fatura The object to be compared.
-     * @return The difference between the dates of the invoices.
-     */
-    public int compareTo(Fatura fatura) {
-        return this.dataInicio.compareTo(fatura.getDateInicio());
-    }
 
 }

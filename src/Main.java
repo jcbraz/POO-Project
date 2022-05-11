@@ -6,9 +6,8 @@ import java.time.temporal.ChronoUnit;
 
 public class Main {
 
-    // FICA A FALTAR:
-    // CRIAR UM MÉTODO QUE IMPRIME UMA FATURA AO UTILIZADOR (MOSTAR DE UMA FORMA
-    // APRESENTÁVEL OS DADOS DA CASA, ETC.)
+    // Bugs a avançar no tempo -> consumos == -1?
+    // Bugs na última estatística -> vazio
     public static void main(String[] args) {
         MainMethods mainMethods = new MainMethods();
         Scanner sc = new Scanner(System.in);
@@ -925,8 +924,13 @@ public class Main {
                             }
                         }
                     } else if (opcaoForStat == 4) {
-                        // System.out.println(
-                                // "O rank de maior consumo de energia é:\n" + mainMethods.rankCasasComMaiorConsumo());
+                        System.out.println("Insira a data de início do período de consulta (AAAA-MM-DD):\n");
+                        String dataInicioString = sc.next();
+                        LocalDate dataInicio = LocalDate.parse(dataInicioString);
+                        System.out.println("Insira a data de fim do período de consulta (AAAA-MM-DD):\n");
+                        String dataFimString = sc.next();
+                        LocalDate dataFim = LocalDate.parse(dataFimString);
+                        System.out.println("O rank de maior consumo de energia é:\n" + mainMethods.rankCasasComMaiorConsumo(dataInicio, dataFim));
                     }
                     break;
             }

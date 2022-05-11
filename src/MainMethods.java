@@ -1,11 +1,16 @@
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MainMethods implements Comparator<CasaInteligente> {
 
@@ -14,6 +19,7 @@ public class MainMethods implements Comparator<CasaInteligente> {
     private Articulador art;
     private Map<Integer, SmartDevices> devices;
     private ArrayDeque<Consumer<MainMethods>> pedidos;
+    private int codeDispositivo;
 
     // Creating a new instance of the class CasaInteligente, Fornecedor and
     // Articulador.
@@ -23,6 +29,7 @@ public class MainMethods implements Comparator<CasaInteligente> {
         this.art = new Articulador();
         this.devices = new HashMap<Integer, SmartDevices>();
         this.pedidos = new ArrayDeque<Consumer<MainMethods>>();
+        this.codeDispositivo = 0;
     }
 
     // Métodos direcionados para manipulação de casas
@@ -41,6 +48,11 @@ public class MainMethods implements Comparator<CasaInteligente> {
         return fornecedor;
     }
 
+    public Map<Integer, SmartDevices> getDevices() {
+        this.devices = new HashMap<Integer, SmartDevices>();
+        return this.devices.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
     /**
      * This function returns the articulator of the current object
      * 
@@ -51,7 +63,11 @@ public class MainMethods implements Comparator<CasaInteligente> {
     }
 
     public ArrayDeque<Consumer<MainMethods>> getPedidos() {
-        return pedidos;
+        return this.pedidos.stream().collect(Collectors.toCollection(ArrayDeque::new));
+    }
+
+    public int getCodeDispositivo() {
+        return codeDispositivo;
     }
 
     /**
@@ -90,7 +106,12 @@ public class MainMethods implements Comparator<CasaInteligente> {
     }
 
     public void setPedidos(ArrayDeque<Consumer<MainMethods>> pedidos) {
-        this.pedidos = pedidos;
+        this.pedidos = new ArrayDeque<Consumer<MainMethods>>();
+        this.pedidos.addAll(pedidos);
+    }
+
+    public void setCodeDispositivo(int codeDispositivo) {
+        this.codeDispositivo = codeDispositivo;
     }
 
     /**
@@ -103,7 +124,7 @@ public class MainMethods implements Comparator<CasaInteligente> {
     public void criaCasa(String nome, int nif, String morada) {
         this.setCi(new CasaInteligente(nome, nif, morada));
         this.art.addCasa(this.ci);
-        
+
     }
 
     /**
@@ -167,7 +188,7 @@ public class MainMethods implements Comparator<CasaInteligente> {
     public CasaInteligente getCiWithCode(int code) throws CasaInexistenteException {
         CasaInteligente casa = this.art.getCasas().get(code);
         if (casa == null)
-            throw new CasaInexistenteException("Nao existe casa com esse código");
+            throw new CasaInexistenteException("Não existe casa com esse código");
         return casa;
     }
 
@@ -218,7 +239,7 @@ public class MainMethods implements Comparator<CasaInteligente> {
      */
     public Map<Integer, SmartDevices> getDivisao(String divisao) throws DivisoesException {
         Map<Integer, SmartDevices> divisoes = ci.getDivisoes().get(divisao);
-        if (divisoes==null)
+        if (divisoes == null)
             throw new DivisoesException("Nao existe essa divisao");
         return divisoes;
     }
@@ -229,12 +250,10 @@ public class MainMethods implements Comparator<CasaInteligente> {
      * @param code The code of the device you want to get.
      * @return The device with the code that was passed as a parameter.
      */
-    public SmartDevices getDeviceWithCode(int code) throws DevicesException {
-                SmartDevices devices= this.ci.getDivisoes().entrySet().stream().flatMap(e -> e.getValue().entrySet().stream())
+    public SmartDevices getDeviceWithCode(int code) {
+        SmartDevices devices = this.ci.getDivisoes().entrySet().stream().flatMap(e -> e.getValue().entrySet().stream())
                 .filter(e -> e.getKey() == code).findFirst().get().getValue();
-                if (devices==null)
-                    throw new DevicesException("Não existe esse dispositivo.");
-                return devices;
+        return devices;
     }
 
     /**
@@ -247,13 +266,12 @@ public class MainMethods implements Comparator<CasaInteligente> {
      * @param code The code of the bulb you want to get.
      * @return SmartBulb
      */
-    public SmartBulb getBulbWithCode(int code) throws DevicesException {
-        SmartBulb lampada = (SmartBulb) this.ci.getDivisoes().entrySet().stream().flatMap(e -> e.getValue().entrySet().stream())
+    public SmartBulb getBulbWithCode(int code) {
+        SmartBulb lampada = (SmartBulb) this.ci.getDivisoes().entrySet().stream()
+                .flatMap(e -> e.getValue().entrySet().stream())
                 .filter(e -> e.getKey() == code).findFirst().get().getValue();
-        if (lampada==null)
-                throw new DevicesException("Não existe essa lâmpada");
         return lampada;
-        
+
     }
 
     /**
@@ -262,11 +280,10 @@ public class MainMethods implements Comparator<CasaInteligente> {
      * @param code The code of the speaker you want to get.
      * @return A SmartSpeaker
      */
-    public SmartSpeaker getSpeakerWithCode(int code) throws DevicesException {
-        SmartSpeaker speaker = (SmartSpeaker) this.ci.getDivisoes().entrySet().stream().flatMap(e -> e.getValue().entrySet().stream())
+    public SmartSpeaker getSpeakerWithCode(int code) {
+        SmartSpeaker speaker = (SmartSpeaker) this.ci.getDivisoes().entrySet().stream()
+                .flatMap(e -> e.getValue().entrySet().stream())
                 .filter(e -> e.getKey() == code).findFirst().get().getValue();
-        if (speaker==null)
-                throw new DevicesException("Não existe esse speaker");
         return speaker;
     }
 
@@ -279,11 +296,10 @@ public class MainMethods implements Comparator<CasaInteligente> {
      * @param code The code of the camera you want to get.
      * @return A SmartCamera
      */
-    public SmartCamera getCameraWithCode(int code) throws DevicesException {
-        SmartCamera camera = (SmartCamera) this.ci.getDivisoes().entrySet().stream().flatMap(e -> e.getValue().entrySet().stream())
+    public SmartCamera getCameraWithCode(int code) {
+        SmartCamera camera = (SmartCamera) this.ci.getDivisoes().entrySet().stream()
+                .flatMap(e -> e.getValue().entrySet().stream())
                 .filter(e -> e.getKey() == code).findFirst().get().getValue();
-        if (camera==null)
-                throw new DevicesException("Essa camera não existe");
         return camera;
     }
 
@@ -307,7 +323,7 @@ public class MainMethods implements Comparator<CasaInteligente> {
      * @param devices     Map<Integer, SmartDevices>
      */
     public void criaDivisao(String nomeDivisao, Map<Integer, SmartDevices> devices) {
-            this.ci.addDivisao(nomeDivisao, devices);
+        this.ci.addDivisao(nomeDivisao, devices);
     }
 
     /**
@@ -400,11 +416,17 @@ public class MainMethods implements Comparator<CasaInteligente> {
     }
 
     public void addPedido(Consumer<MainMethods> pedido) throws Exception {
-        if (this.pedidos.size() == 0) {
-            Exception e = new Exception("Não há pedidos pendentes");
-            throw new InterruptedException(e.getMessage());
+        this.pedidos.add(pedido);
+    }
+
+    public void execPedidos() throws Exception {
+        if (this.pedidos.isEmpty()) {
+            throw new Exception("Não há pedidos para executar");
         } else {
-            this.pedidos.add(pedido);
+            for (Consumer<MainMethods> pedido : this.pedidos) {
+                pedido.accept(this);
+                removePedido(pedido);
+            }
         }
     }
 
@@ -413,7 +435,7 @@ public class MainMethods implements Comparator<CasaInteligente> {
             Exception e = new Exception("Pedido não existe");
             throw new Exception(e.getMessage());
         } else {
-            this.getPedidos().remove(pedido);
+            this.pedidos.remove(pedido);
         }
     }
 
@@ -506,32 +528,66 @@ public class MainMethods implements Comparator<CasaInteligente> {
     }
 
     /**
-     * It sorts the houses by their daily energy consumption and returns a list of
+     * It sorts the houses by their energy spent in a given time space and returns a
+     * list of
      * their codes
      * 
      * @return An ArrayList of Integers.
      */
-    public ArrayList<Integer> rankCasasComMaiorConsumo() {
-        ArrayList<Integer> casas = new ArrayList<Integer>();
-        ArrayList<CasaInteligente> consumosByCasa = new ArrayList<CasaInteligente>();
-        this.art.getFornecedores().values()
-                .forEach(fornece -> fornece.getClientes().values().forEach(casa -> consumosByCasa.add(casa)));
-        consumosByCasa.sort(new Comparator<CasaInteligente>() {
-            public int compare(CasaInteligente ci1, CasaInteligente ci2) {
-                if (ci1.energiaTotalDiariaCasa() > ci2.energiaTotalDiariaCasa()) {
-                    return -1;
-                } else if (ci1.energiaTotalDiariaCasa() < ci2.energiaTotalDiariaCasa()) {
-                    return 1;
-                } else {
-                    return 0;
-                }
+ 
+
+    private static boolean validateFatura(LocalDate dateInicio, LocalDate dateFim, Fatura f) {
+        if (f.getDateInicio().isAfter(dateInicio) && f.getDateFim().isBefore(dateFim)
+                || f.getDateInicio().isEqual(dateInicio) && f.getDateFim().isEqual(dateFim)
+                || f.getDateInicio().isAfter(dateInicio) && f.getDateFim().isEqual(dateFim)
+                || f.getDateInicio().isEqual(dateInicio) && f.getDateFim().isAfter(dateFim)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private static Map<Integer, Double> sortByValue(Map<Integer, Double> unsortMap) {
+        List<Map.Entry<Integer, Double>> list = new LinkedList<Map.Entry<Integer, Double>>(unsortMap.entrySet());
+
+        Collections.sort(list, new Comparator<Map.Entry<Integer, Double>>() {
+            public int compare(Map.Entry<Integer, Double> o1,
+                    Map.Entry<Integer, Double> o2) {
+                return (o1.getValue()).compareTo(o2.getValue());
             }
         });
-        for (CasaInteligente ci : consumosByCasa) {
-            casas.add(ci.getCode());
+
+        Map<Integer, Double> sortedMap = new LinkedHashMap<Integer, Double>();
+        for (Map.Entry<Integer, Double> entry : list) {
+            sortedMap.put(entry.getKey(), entry.getValue());
         }
-        return casas;
+
+        return sortedMap;
     }
+
+    public ArrayList<Integer> rankCasasComMaiorConsumo(LocalDate dateInicio, LocalDate dateFim) {
+        int codigoCasa = 0;
+        double consumo = 0.00;
+        Map<Integer, Double> consumoPerCasa = new HashMap<Integer, Double>();
+        for (Fatura f : this.getArt().getFaturas().values()) {
+            if (validateFatura(dateInicio, dateFim, f)) {
+                codigoCasa = f.getCodigoCasa();
+                consumo = f.getConsumo();
+            }
+            for (Fatura f2 : this.getArt().getFaturas().values()) {
+                if (f2.getCodigoCasa() == codigoCasa && validateFatura(dateInicio, dateFim, f2)) {
+                    consumo += f2.getConsumo();
+                }
+            }
+            consumoPerCasa.put(f.getCodigoCasa(), consumo);
+            consumo = 0.00;
+        }
+
+        sortByValue(consumoPerCasa);
+        ArrayList<Integer> casasID = new ArrayList<Integer>(consumoPerCasa.keySet());
+        return casasID;
+    }
+
 
     // Avanço do tempo
 

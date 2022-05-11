@@ -25,7 +25,8 @@ public class SmartSpeaker extends SmartDevices {
     public SmartSpeaker(boolean isON, int volume, String nomeRadio, String marcaEquipamento,
             float consumoDiarioSpeaker) {
         this.volume = volume;
-        this.id = counter++;
+        this.id = counter;
+        counter++;
         this.nomeRadio = nomeRadio;
         this.marcaEquipamento = marcaEquipamento;
         this.consumoDiarioSpeaker = consumoDiarioSpeaker;

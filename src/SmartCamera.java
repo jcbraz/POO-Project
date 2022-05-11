@@ -22,7 +22,8 @@ public class SmartCamera extends SmartDevices {
     // It's a constructor.
     public SmartCamera(boolean isON, int resolution_x, int resolution_y, double filesize, float consumoDiarioCamera) {
         this.isON = isON;
-        this.id = counter++;
+        this.id = counter;
+        counter++;
         this.resolution_x = resolution_x;
         this.resolution_y = resolution_y;
         this.filesize = filesize;

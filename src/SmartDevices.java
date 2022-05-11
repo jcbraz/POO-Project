@@ -19,7 +19,8 @@ public abstract class SmartDevices implements Serializable {
     // A constructor that initializes the attributes of the class SmartDevices.
     public SmartDevices(boolean isON, float custoInstalacao) {
         this.isON = isON;
-        this.id = counter++;
+        this.id = counter;
+        counter++;
         this.custoInstalacao = custoInstalacao;
     }
 

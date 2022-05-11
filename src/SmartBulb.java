@@ -12,7 +12,8 @@ public class SmartBulb extends SmartDevices {
     // A constructor.
     public SmartBulb(boolean isON, String tonalidade, double dimensoes, float consumoDiarioBulb) {
         this.isON = isON;
-        this.id = counter++;
+        this.id = counter;
+        counter++;
         this.tonalidade = tonalidade;
         this.dimensoes = dimensoes;
         this.consumoDiarioBulb = consumoDiarioBulb;

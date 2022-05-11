@@ -11,8 +11,9 @@ public class CasaInteligente {
     private int nifProprietario;
     private String morada;
     private int code;
-    private ArrayList<Integer> codigosDeFaturas; // CODIGOS DE ACESSO FATURAS DA CASA QUE SERÃO USADAS NO MAP PRESENTE NO
-                                           // ARTICULADOR (CONVEM GUARDAR COPIA NO FORNECEDOR)
+    private ArrayList<Integer> codigosDeFaturas; // CODIGOS DE ACESSO FATURAS DA CASA QUE SERÃO USADAS NO MAP PRESENTE
+                                                 // NO
+    // ARTICULADOR (CONVEM GUARDAR COPIA NO FORNECEDOR)
     private Map<String, Map<Integer, SmartDevices>> divisoes;
 
     // A constructor.
@@ -73,12 +74,13 @@ public class CasaInteligente {
     }
 
     /**
-     * This function returns an ArrayList of Integers that contains the codes of the invoices
+     * This function returns an ArrayList of Integers that contains the codes of the
+     * invoices
      * 
      * @return The method returns an ArrayList of Integers.
      */
     public ArrayList<Integer> getCodigosDeFaturas() {
-        return this.codigosDeFaturas;
+        return this.codigosDeFaturas.stream().collect(Collectors.toCollection(ArrayList::new)); // cuidado!
     }
 
     /**
@@ -91,12 +93,16 @@ public class CasaInteligente {
     }
 
     /**
-     * It returns a map of the form <String, Map<Integer, SmartDevices>>, where the String is the name
-     * of the division and the Map<Integer, SmartDevices> is a map of the form <Integer, SmartDevices>,
-     * where the Integer is the id of the device and the SmartDevices is the device itself
+     * It returns a map of the form <String, Map<Integer, SmartDevices>>, where the
+     * String is the name
+     * of the division and the Map<Integer, SmartDevices> is a map of the form
+     * <Integer, SmartDevices>,
+     * where the Integer is the id of the device and the SmartDevices is the device
+     * itself
      * 
-     * @return A map with the key being the name of the division and the value being a map with the key
-     * being the floor number and the value being a SmartDevices object.
+     * @return A map with the key being the name of the division and the value being
+     *         a map with the key
+     *         being the floor number and the value being a SmartDevices object.
      */
     public Map<String, Map<Integer, SmartDevices>> getDivisoes() {
         return this.divisoes.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -112,7 +118,8 @@ public class CasaInteligente {
     }
 
     /**
-     * This function sets the nifProprietario variable to the value of the nifProprietario parameter
+     * This function sets the nifProprietario variable to the value of the
+     * nifProprietario parameter
      * 
      * @param nifProprietario The NIF of the owner of the Property.
      */
@@ -139,7 +146,8 @@ public class CasaInteligente {
     }
 
     /**
-     * It creates a new ArrayList, iterates over the given ArrayList, and adds each element to the new ArrayList
+     * It creates a new ArrayList, iterates over the given ArrayList, and adds each
+     * element to the new ArrayList
      * 
      * @param codigosDeFaturas ArrayList of Integers
      */
@@ -149,7 +157,8 @@ public class CasaInteligente {
     }
 
     /**
-     * It takes a map of maps of SmartDevices and copies it to the class's map of maps of SmartDevices
+     * It takes a map of maps of SmartDevices and copies it to the class's map of
+     * maps of SmartDevices
      * 
      * @param divisoes Map<String, Map<Integer, SmartDevices>>
      */
@@ -158,9 +167,9 @@ public class CasaInteligente {
         divisoes.entrySet().stream().forEach(e -> this.divisoes.put(e.getKey(), e.getValue()));
     }
 
-
     /**
-     * If the object is the same object, return true. If the object is null or of a different class,
+     * If the object is the same object, return true. If the object is null or of a
+     * different class,
      * return false. If the object is of the same class, compare the fields
      * 
      * @param o the object to be compared.
@@ -195,7 +204,8 @@ public class CasaInteligente {
     }
 
     /**
-     * The clone() method creates a new object that is a copy of the original object.
+     * The clone() method creates a new object that is a copy of the original
+     * object.
      * 
      * @return A new CasaInteligente object with the same state as the original.
      */
@@ -204,7 +214,8 @@ public class CasaInteligente {
     }
 
     /**
-     * It returns true if there's a light bulb with the given key in any of the rooms
+     * It returns true if there's a light bulb with the given key in any of the
+     * rooms
      * 
      * @param key The key of the bulb to be checked
      * @return a boolean value.
@@ -250,8 +261,9 @@ public class CasaInteligente {
      * It adds a new division to the house
      * 
      * @param divisaokey The name of the division.
-     * @param devices A map of devices, where the key is the device's ID and the value is the device
-     * itself.
+     * @param devices    A map of devices, where the key is the device's ID and the
+     *                   value is the device
+     *                   itself.
      */
     public void addDivisao(String divisaokey, Map<Integer, SmartDevices> devices) {
         this.divisoes.put(divisaokey, devices);
@@ -330,7 +342,7 @@ public class CasaInteligente {
      * It checks if a device exists in a division
      * 
      * @param divisaokey The key of the division
-     * @param id the id of the device
+     * @param id         the id of the device
      * @return A boolean value.
      */
     public boolean existeDeviceInDivisao(String divisaokey, int id) {
@@ -341,7 +353,7 @@ public class CasaInteligente {
      * It adds a device to a division
      * 
      * @param nomeDivisao The name of the division you want to add the device to.
-     * @param device The device to be added to the division.
+     * @param device      The device to be added to the division.
      */
     public void addDeviceToDivisao(String nomeDivisao, SmartDevices device) {
         this.divisoes.get(nomeDivisao).put(device.getId(), device.clone());
@@ -351,7 +363,7 @@ public class CasaInteligente {
      * It removes a device from a division
      * 
      * @param divisaokey The key of the division you want to remove the device from.
-     * @param id the id of the device
+     * @param id         the id of the device
      */
     public void removeDeviceFromDivisao(String divisaokey, int id) {
         this.divisoes.get(divisaokey).remove(id);
@@ -368,7 +380,8 @@ public class CasaInteligente {
     }
 
     /**
-     * For each division, if the division contains the device with the given id, turn off the device.
+     * For each division, if the division contains the device with the given id,
+     * turn off the device.
      * 
      * @param id The id of the device you want to turn off.
      */
@@ -391,7 +404,8 @@ public class CasaInteligente {
     /**
      * Adds a new invoice code to the list of invoice codes.
      * 
-     * @param codeFatura The code of the invoice to be added to the list of invoices.
+     * @param codeFatura The code of the invoice to be added to the list of
+     *                   invoices.
      */
     public void addFatura(int codeFatura) {
         this.codigosDeFaturas.add(codeFatura);

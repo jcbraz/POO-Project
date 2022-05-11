@@ -1,6 +1,4 @@
 import java.util.Map;
-import java.util.function.Consumer;
-import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
@@ -10,7 +8,6 @@ public class Articulador {
     private Map<Integer, CasaInteligente> casas;
     private Map<Integer, Fornecedor> fornecedores;
     private Map<Integer, Fatura> faturas;
-
 
     // It's the constructor of the class Articulador.
     public Articulador() {
@@ -24,7 +21,6 @@ public class Articulador {
         setCasas(ci.getCasas());
         setFornecedores(ci.getFornecedores());
         setFaturas(ci.getFaturas());
-        setPedidos(ci.getPedidos());
     }
 
     /**
@@ -60,7 +56,6 @@ public class Articulador {
         return this.faturas.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-
     /**
      * > This function sets the value of the variable `casas` to the value of the
      * parameter `casas`
@@ -69,7 +64,9 @@ public class Articulador {
      *              ID.
      */
     public void setCasas(Map<Integer, CasaInteligente> casas) {
-        this.casas = casas;
+        this.casas = new HashMap<>();
+        casas.entrySet().forEach(entry -> this.casas.put(entry.getKey(), entry.getValue().clone()));
+
     }
 
     /**
@@ -81,7 +78,8 @@ public class Articulador {
      *                     the fornecedor itself.
      */
     public void setFornecedores(Map<Integer, Fornecedor> fornecedores) {
-        this.fornecedores = fornecedores;
+        this.fornecedores = new HashMap<>();
+        fornecedores.entrySet().forEach(entry -> this.fornecedores.put(entry.getKey(), entry.getValue().clone()));
     }
 
     /**
@@ -91,11 +89,8 @@ public class Articulador {
      * @param faturas A map of all the invoices that are in the system.
      */
     public void setFaturas(Map<Integer, Fatura> faturas) {
-        this.faturas = faturas;
-    }
-
-    public void setPedidos(ArrayDeque<Consumer> pedidos) {
-        this.pedidos = pedidos;
+        this.faturas = new HashMap<>();
+        faturas.entrySet().forEach(entry -> this.faturas.put(entry.getKey(), entry.getValue().clone()));
     }
 
     /**
@@ -199,6 +194,6 @@ public class Articulador {
      */
     public void addFaturaToMap(Fatura f) {
         this.faturas.put(f.getCode(), f.clone());
-    } 
+    }
 
 }
