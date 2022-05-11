@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Fatura {
+public class Fatura implements Serializable {
 
     // Declaring the variables that will be used in the class.
     private static int counter = 0;

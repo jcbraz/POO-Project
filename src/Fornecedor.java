@@ -1,10 +1,11 @@
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
-public class Fornecedor {
+public class Fornecedor implements Serializable{
     private static int counter = 0;
     private String nomeFornecedor;
     private int code;

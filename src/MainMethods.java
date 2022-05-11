@@ -1,7 +1,7 @@
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.lang.reflect.Array;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MainMethods implements Comparator<CasaInteligente> {
+public class MainMethods implements Serializable {
 
     private CasaInteligente ci;
     private Fornecedor fornecedor;
@@ -30,6 +30,14 @@ public class MainMethods implements Comparator<CasaInteligente> {
         this.devices = new HashMap<Integer, SmartDevices>();
         this.pedidos = new ArrayDeque<Consumer<MainMethods>>();
         this.codeDispositivo = 0;
+    }
+
+
+    public MainMethods setMainMethods(MainMethods mainMethods) {
+        this.ci = mainMethods.getCi();
+        this.fornecedor = mainMethods.getFornecedor();
+        this.art = mainMethods.getArt();
+        return this;
     }
 
     // Métodos direcionados para manipulação de casas
@@ -322,8 +330,9 @@ public class MainMethods implements Comparator<CasaInteligente> {
      * @param nomeDivisao The name of the division you want to create.
      * @param devices     Map<Integer, SmartDevices>
      */
-    public void criaDivisao(String nomeDivisao, Map<Integer, SmartDevices> devices) {
-        this.ci.addDivisao(nomeDivisao, devices);
+    public void criaDivisao(int codeCasa,String nomeDivisao, Map<Integer, SmartDevices> devices) {
+        // this.ci.addDivisao(nomeDivisao, devices);
+        this.art.getCasas().get(codeCasa).addDivisao(nomeDivisao, devices);
     }
 
     /**
@@ -597,4 +606,6 @@ public class MainMethods implements Comparator<CasaInteligente> {
         this.art.addFaturaToMap(fatura);
         this.art.getFornecedores().get(forneceai.getCode()).addFaturaClienteAL(fatura);
     }
+
+
 }

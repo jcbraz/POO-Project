@@ -1,4 +1,9 @@
 import java.util.Scanner;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +35,9 @@ public class Main {
                                 "6 - Alterar configuração de dispositivos,\n" +
                                 "7 - Alterar o Fornecedor de uma dada Casa Inteligente,\n" +
                                 "8 - Avançar para determinada data & Gerar Fatura.\n" +
-                                "9 - Consultar estatísticas de consumo,\n");
+                                "9 - Consultar estatísticas de consumo,\n" +
+                               "10 - Salvar Estado do Programa\n" +
+                               "11 - Carregar um Estado de Programa\n");
                 try {
                     while (!sc.hasNextInt()) {
                         sc.next();
@@ -41,7 +48,7 @@ public class Main {
                             "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
                     opcao = 0;
                 }
-            } while (opcao < 1 || opcao > 9);
+            } while (opcao < 1 || opcao > 11);
             switch (opcao) {
                 case 1:
                     System.out.println("Insira o nome do fornecedor: \n");
@@ -94,10 +101,10 @@ public class Main {
                                 "Casa não existe. Por favor, crie a casa primeiro.\n");
                         break;
                     } else {
-                        mainMethods.criaDivisao("Sala", new HashMap<Integer, SmartDevices>());
-                        mainMethods.criaDivisao("Quarto", new HashMap<Integer, SmartDevices>());
-                        mainMethods.criaDivisao("Cozinha", new HashMap<Integer, SmartDevices>());
-                        mainMethods.criaDivisao("Casa de Banho", new HashMap<Integer, SmartDevices>());
+                        mainMethods.criaDivisao(codigoCasa,"Sala", new HashMap<Integer, SmartDevices>());
+                        mainMethods.criaDivisao(codigoCasa,"Quarto", new HashMap<Integer, SmartDevices>());
+                        mainMethods.criaDivisao(codigoCasa,"Cozinha", new HashMap<Integer, SmartDevices>());
+                        mainMethods.criaDivisao(codigoCasa,"Casa de Banho", new HashMap<Integer, SmartDevices>());
                         System.out.println("Insira a divisão que pretende selecionar/criar.\n"
                                 + "As divisões disponíveis até ao momentos são: \n"
                                 + mainMethods.getArt().getCasas().get(codigoCasa).getDivisoes());
@@ -118,7 +125,7 @@ public class Main {
                                 }
                             } while (resposta < 1 || resposta > 2);
                             if (resposta == 1) {
-                                mainMethods.criaDivisao(divisao, new HashMap<Integer, SmartDevices>());
+                                mainMethods.criaDivisao(codigoCasa,divisao, new HashMap<Integer, SmartDevices>());
                                 System.out.println("Divisão criada com sucesso!");
                             } else
                                 System.out.println("Divisão não adicionada.\n");
@@ -808,9 +815,6 @@ public class Main {
                         System.out.println(e.getMessage());
                     }
                     break;
-                default:
-                    System.out.println("Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
-                    break;
                 case 9:
                     int opcaoForStat = 0;
                     do {
@@ -932,6 +936,39 @@ public class Main {
                         LocalDate dataFim = LocalDate.parse(dataFimString);
                         System.out.println("O rank de maior consumo de energia é:\n" + mainMethods.rankCasasComMaiorConsumo(dataInicio, dataFim));
                     }
+                    break;
+                    case 10:
+                        System.out.println("Introduza o nome do ficheiro de armazenamento: \n");
+                        String nomeFicheiro = sc.next();
+                        try {
+                            FileOutputStream fos = new FileOutputStream(nomeFicheiro);
+                            ObjectOutputStream oos = new ObjectOutputStream(fos);
+                            oos.writeObject(mainMethods);
+                            oos.writeObject(mainMethods.getArt());
+                            oos.writeObject(mainMethods.getArt().getCasas());
+                            oos.writeObject(mainMethods.getArt().getFaturas());
+                            oos.writeObject(mainMethods.getArt().getFornecedores());
+                            oos.close();
+                        } catch (IOException e) {
+                            System.out.println(e.getMessage());
+                        }
+                        break;
+                    case 11:
+                    try {
+                        System.out.println("Insira o nome do ficheiro que pretende carregar: \n");
+                        String nomeFicheiro2 = sc.next();
+                        FileInputStream fileStream = new FileInputStream(nomeFicheiro2);
+                        ObjectInputStream inputFile = new ObjectInputStream(fileStream);
+                        MainMethods mainMethodsFile = (MainMethods) inputFile.readObject();
+                        mainMethods.setMainMethods(mainMethodsFile);
+                        System.out.println("Os dados foram adicionados com sucesso!");
+                        inputFile.close();
+                    } catch (IOException | ClassNotFoundException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                    default:
+                    System.out.println("Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
                     break;
             }
             System.out.println("Deseja efetuar mais alguma operação?\n" + "S/N?\n");

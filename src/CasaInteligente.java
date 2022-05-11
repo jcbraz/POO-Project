@@ -1,9 +1,10 @@
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class CasaInteligente {
+public class CasaInteligente implements Serializable {
 
     // The class attributes.
     private static int counter = 0;
