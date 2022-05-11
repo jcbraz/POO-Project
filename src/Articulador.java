@@ -65,7 +65,7 @@ public class Articulador {
      */
     public void setCasas(Map<Integer, CasaInteligente> casas) {
         this.casas = new HashMap<>();
-        casas.entrySet().forEach(entry -> this.casas.put(entry.getKey(), entry.getValue().clone()));
+        casas.entrySet().forEach(entry -> this.casas.put(entry.getKey(), entry.getValue()));
 
     }
 
@@ -79,7 +79,8 @@ public class Articulador {
      */
     public void setFornecedores(Map<Integer, Fornecedor> fornecedores) {
         this.fornecedores = new HashMap<>();
-        fornecedores.entrySet().forEach(entry -> this.fornecedores.put(entry.getKey(), entry.getValue().clone()));
+        fornecedores.entrySet().forEach(entry -> this.fornecedores.put(entry.getKey(), entry.getValue()));
+      // this.fornecedores=fornecedores;
     }
 
     /**
@@ -90,7 +91,7 @@ public class Articulador {
      */
     public void setFaturas(Map<Integer, Fatura> faturas) {
         this.faturas = new HashMap<>();
-        faturas.entrySet().forEach(entry -> this.faturas.put(entry.getKey(), entry.getValue().clone()));
+        faturas.entrySet().forEach(entry -> this.faturas.put(entry.getKey(), entry.getValue()));
     }
 
     /**
@@ -145,7 +146,7 @@ public class Articulador {
      *                   HashMap.
      */
     public void addFornecedor(Fornecedor fornecedor) {
-        this.fornecedores.put(fornecedor.getCode(), fornecedor.clone());
+        this.fornecedores.put(fornecedor.getCode(), fornecedor);
     }
 
     /**
