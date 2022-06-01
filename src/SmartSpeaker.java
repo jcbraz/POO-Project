@@ -2,153 +2,124 @@
  * SmartSpeaker is a class that represents a smart speaker
  */
 public class SmartSpeaker extends SmartDevices {
-
-    private static int counter = 0;
-    private boolean isON;
     private int volume; // escala de 0 até 100
-    private int id;
     private String nomeRadio;
     private String marcaEquipamento;
     private float consumoDiarioSpeaker; // função da marca do equipamento
 
-    // It's a constructor.
+    /**
+    *Construtor
+     */
     public SmartSpeaker() {
-        this.isON = false;
+        super();
         this.volume = 0;
-        this.id = 0;
         this.nomeRadio = "";
         this.marcaEquipamento = "";
         this.consumoDiarioSpeaker = 0;
     }
 
-    // It's a constructor.
-    public SmartSpeaker(boolean isON, int volume, String nomeRadio, String marcaEquipamento,
-            float consumoDiarioSpeaker) {
+    /**
+    *Construtor
+     */
+
+    public SmartSpeaker(SmartSpeaker speaker) {
+        super(speaker);
+        this.volume = speaker.volume;
+        this.nomeRadio = speaker.nomeRadio;
+        this.consumoDiarioSpeaker = speaker.consumoDiarioSpeaker;
+        this.marcaEquipamento = speaker.marcaEquipamento;
+    }
+
+    /**
+    *Construtor
+     */
+    public SmartSpeaker(boolean isON, float custoInstalacao, int volume, String nomeRadio, String marcaEquipamento,
+        float consumoDiarioSpeaker) {
+        super(isON,custoInstalacao);
         this.volume = volume;
-        this.id = counter;
-        counter++;
         this.nomeRadio = nomeRadio;
         this.marcaEquipamento = marcaEquipamento;
         this.consumoDiarioSpeaker = consumoDiarioSpeaker;
     }
 
-    /**
-     * This function returns a boolean value that indicates whether the light is on or off
-     * 
-     * @return isON
-     */
-    public boolean isON() {
-        return isON;
-    }
 
     /**
-     * This function returns the volume of the box.
+     * Getter do volume 
      * 
-     * @return The volume of the box.
+     * @return volume 
      */
     public int getVolume() {
         return volume;
     }
 
     /**
-     * This function returns the id of the object
+     * Getter da estacao de radio
      * 
-     * @return The id of the object.
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * This function returns the name of the radio station
-     * 
-     * @return The name of the radio station.
+     * @return nome da estacao de radio
      */
     public String getNomeRadio() {
         return nomeRadio;
     }
 
     /**
-     * It returns the value of the variable marcaEquipamento.
+     * Getter da marca do speaker
      * 
-     * @return The brand of the equipment.
+     * @return marca do equipamento
      */
     public String getMarcaEquipamento() {
         return marcaEquipamento;
     }
 
     /**
-     * This function returns the value of the variable consumoDiarioSpeaker
+     * Getter do consumo diario do speaker
      * 
-     * @return The value of the variable consumoDiarioSpeaker.
+     * @return valor da variavel consumoDiarioSpeaker
      */
     public double getconsumoDiarioSpeaker() {
         return consumoDiarioSpeaker;
     }
 
-    // This function sets the value of the isON variable to true.
-    public void setON() {
-        isON = true;
-    }
-
-    // This function sets the value of the isON variable to false.
-    public void setOFF() {
-        isON = false;
-    }
-
     /**
-     * This function sets the volume of the TV to the value of the parameter.
+     * setter do volume
      * 
-     * @param volume The volume of the sound.
+     * @param volume o volume sonoro
      */
     public void setVolume(int volume) {
         this.volume = volume;
     }
 
     /**
-     * This function sets the id of the object to the value of the parameter id.
+     * Setter do nome da radio
      * 
-     * @param id The id of the user.
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
-     * This function sets the name of the radio
-     * 
-     * @param nomeRadio The name of the radio button.
+     * @param nomeRadio nome da estacao de radio
      */
     public void setNomeRadio(String nomeRadio) {
         this.nomeRadio = nomeRadio;
     }
 
     /**
-     * This function sets the value of the variable marcaEquipamento to the value of the parameter
-     * marcaEquipamento
+     * Setter da marca do speaker
      * 
-     * @param marcaEquipamento The brand of the equipment.
+     * @param marcaEquipamento marca do speaker
      */
     public void setMarcaEquipamento(String marcaEquipamento) {
         this.marcaEquipamento = marcaEquipamento;
     }
 
     /**
-     * This function sets the value of the variable consumoDiarioSpeaker to the value of the parameter
-     * consumoDiarioSpeaker
+     * Setter do consumo diario do speaker
      * 
-     * @param consumoDiarioSpeaker The amount of power consumed by the speaker in a day.
+     * @param consumoDiarioSpeaker consumo diario do speaker
      */
     public void setconsumoDiarioSpeaker(float consumoDiarioSpeaker) {
         this.consumoDiarioSpeaker = consumoDiarioSpeaker;
     }
 
     /**
-     * If the object is the same object, return true. If the object is null or of a different class,
-     * return false. If the object is of the same class, compare the fields
+     *  Metodo equals
      * 
-     * @param o the object to be compared.
-     * @return The hashCode() method is overridden to return the hashCode of the id field.
+     * @param o objeto a ser comparado
+     * @return hashcode
      */
     @Override
     public boolean equals(Object o) {
@@ -157,23 +128,21 @@ public class SmartSpeaker extends SmartDevices {
         if (o == null || getClass() != o.getClass())
             return false;
         SmartSpeaker that = (SmartSpeaker) o;
-        return isON == that.isON && volume == that.volume && id == that.id
-                && consumoDiarioSpeaker == that.consumoDiarioSpeaker
+                return consumoDiarioSpeaker == that.consumoDiarioSpeaker
                 && nomeRadio.equals(that.nomeRadio)
                 && marcaEquipamento.equals(that.marcaEquipamento);
     }
 
     /**
-     * The toString() method returns a string representation of the object
+     * metodo toString()
      * 
-     * @return The toString method is being returned.
+     * @return strings concatenadas
      */
     @Override
     public String toString() {
         return "SmartSpeaker{" +
-                "isON=" + isON +
-                "volume=" + volume +
-                ", id=" + id +
+                "id= " + super.getId() +
+                ", volume=" + volume +
                 ", nomeRadio='" + nomeRadio + '\'' +
                 ", marcaEquipamento='" + marcaEquipamento + '\'' +
                 ", consumoDiarioSpeaker=" + consumoDiarioSpeaker +
@@ -181,30 +150,35 @@ public class SmartSpeaker extends SmartDevices {
     }
 
     /**
-     * The clone() method is used to create a copy of an object
+     * Metodo clone() para clonar um objeto
      * 
-     * @return A new object of the same type as the object that invoked the method, with the same
-     * state.
+     * @return novo objeto(smartspeaker) com as caracteristicas do original 
      */
     public SmartSpeaker clone() {
-        return new SmartSpeaker(isON, volume, nomeRadio, marcaEquipamento, consumoDiarioSpeaker);
+        return new SmartSpeaker(this);
     }
 
     /**
-     * It returns the daily consumption of the speaker, which is calculated by multiplying the daily
-     * consumption of the speaker by a factor that depends on the volume of the speaker
+     * Metodo que calcula o valor de consumo diario do speaker com base numa 
+     * formula que leva em conta o seu volume
      * 
-     * @return The return is the consumption of the speaker.
+     * @return consumoDiario do speaker
      */
     public double consumoDiario() {
-        double grauConsumo = 0.00;
-        if (this.volume >= 25 && this.volume < 50)
-            grauConsumo = 1.15;
-        if (this.volume >= 50 && this.volume < 75)
-            grauConsumo = 1.30;
-        if (this.volume >= 75)
-            grauConsumo = 1.45;
+        if (this.isON() == false)
+            return 0.00;
+        else {
+            double grauConsumo = 0.00;
+            if (this.volume < 25) grauConsumo = 1.05;
+            if (this.volume >= 25 && this.volume < 50)
+                grauConsumo = 1.15;
+            if (this.volume >= 50 && this.volume < 75)
+                grauConsumo = 1.30;
+            if (this.volume >= 75)
+                grauConsumo = 1.45;
+            
 
-        return (grauConsumo * this.consumoDiarioSpeaker);
+            return (grauConsumo * this.consumoDiarioSpeaker);
+        }
     }
 }

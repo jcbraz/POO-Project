@@ -1,53 +1,64 @@
-// SmartBulb is a class that represents a smart bulb
+/**
+*SmartBulb corresponde uma classe que representa as lampadas inteligentes
+ */
+
 public class SmartBulb extends SmartDevices {
 
-    // The attributes of the class SmartBulb.
-    private static int counter = 0;
-    private boolean isON;
-    private int id;
+    /**
+    *Atributos da classe
+     */
     private String tonalidade;
     private double dimensoes; // em centimetros
     private float consumoDiarioBulb;
 
-    // A constructor.
-    public SmartBulb(boolean isON, String tonalidade, double dimensoes, float consumoDiarioBulb) {
-        this.isON = isON;
-        this.id = counter;
-        counter++;
+    /**
+    *Construtor
+     */
+    public SmartBulb(boolean isON, float custoInstalacao, String tonalidade, double dimensoes,
+            float consumoDiarioBulb) {
+        super(isON, custoInstalacao);
         this.tonalidade = tonalidade;
         this.dimensoes = dimensoes;
         this.consumoDiarioBulb = consumoDiarioBulb;
     }
 
-    // A constructor.
+    public SmartBulb(SmartBulb luz) {
+        super(luz);
+        this.tonalidade = luz.tonalidade;
+        this.dimensoes = luz.dimensoes;
+        this.consumoDiarioBulb = luz.consumoDiarioBulb;
+    }
+
+    /**
+    * Construtor
+     */
     public SmartBulb() {
-        this.isON = false;
-        this.id = 0;
+        super();
         this.tonalidade = "";
         this.dimensoes = 0;
         this.consumoDiarioBulb = 0;
     }
 
     /**
-     * This function returns the tonality of the song
+     * Getter da tonalidade
      * 
-     * @return The tonalidade attribute.
+     * @return tonalidade
      */
     public String getTonalidade() {
         return tonalidade;
     }
 
     /**
-     * This function returns the value of the variable dimensoes
+     * Getter das dimensoes
      * 
-     * @return The value of the variable dimensoes.
+     * @return dimensoes
      */
     public double getDimensoes() {
         return dimensoes;
     }
 
     /**
-     * This function returns the value of the variable consumoDiarioBulb
+     * Getter do consumo diário da lampada
      * 
      * @return The value of the variable consumoDiarioBulb.
      */
@@ -55,71 +66,50 @@ public class SmartBulb extends SmartDevices {
         return consumoDiarioBulb;
     }
 
-    // This function sets the value of the isON variable to true.
-    public void setON() {
-        isON = true;
-    }
-
-    // This function sets the value of the isON variable to false.
-    public void setOFF() {
-        isON = false;
-    }
-
     /**
-     * This function sets the id of the object to the value of the parameter id.
-     * 
-     * @param id The id of the user.
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    // This function sets the value of the isON variable to false.
-    public void setOff() {
-        isON = false;
-    }
-
-    // This function sets the tonalidade to Neutral.
+    *Método que faz set da tonalidade para neutro
+     */ 
     public void setTonalidadeNeutral() {
         this.tonalidade = "Neutral";
     }
 
-    // This function sets the tonalidade to Warm.
+    /**
+    *Método que dá set da tonalidade para warm
+     */ 
     public void setTonalidadeWarm() {
         this.tonalidade = "Warm";
     }
 
-    // This function sets the tonalidade to Cold.
+    /**
+    *Método que dá set da tonalidade para cold
+     */ 
     public void setTonalidadeCold() {
         this.tonalidade = "Cold";
     }
 
     /**
-     * This function sets the value of the variable dimensoes to the value of the variable dimensoes
+     * Set das dimensoes
      * 
-     * @param dimensoes The dimensions of the object.
+     * @param dimensoes dimensoes da lampada
      */
     public void setDimensoes(double dimensoes) {
         this.dimensoes = dimensoes;
     }
 
     /**
-     * This function sets the value of the variable consumoDiarioBulb to the value of the parameter
-     * consumoDiarioBulb
+     *set do consumo diario da lampada
      * 
-     * @param consumoDiarioBulb The daily consumption of the bulb in kWh.
+     * @param consumoDiarioBulb consumo diario da lampada
      */
     public void setconsumoDiarioBulb(float consumoDiarioBulb) {
         this.consumoDiarioBulb = consumoDiarioBulb;
     }
 
     /**
-     * If the object is the same as the one being compared, return true. If the object is null or of a
-     * different class, return false. If the object is of the same class, compare the fields and return
-     * true if they are all equal
+     *metodo que verifica igualdade
      * 
-     * @param o The object to be compared.
-     * @return The hashCode of the object.
+     * @param o o objeto a ser comparado
+     * @return o hashcode do objeto
      */
     @Override
     public boolean equals(Object o) {
@@ -128,21 +118,20 @@ public class SmartBulb extends SmartDevices {
         if (o == null || getClass() != o.getClass())
             return false;
         SmartBulb smartBulb = (SmartBulb) o;
-        return isON == smartBulb.isON && smartBulb.id == id && Double.compare(smartBulb.dimensoes, dimensoes) == 0
+        return Double.compare(smartBulb.dimensoes, dimensoes) == 0
                 && Double.compare(smartBulb.consumoDiarioBulb, consumoDiarioBulb) == 0
                 && tonalidade.equals(smartBulb.tonalidade);
     }
 
     /**
-     * The toString() method returns a string representation of the object
+     * metodo tostring
      * 
-     * @return The toString method is being returned.
+     * @return strings concatenadas
      */
     @Override
     public String toString() {
         return "SmartBulb{" +
-                "isON=" + isON +
-                ", id=" + id +
+                "id = " + super.getId() +
                 ", tonalidade='" + tonalidade + '\'' +
                 ", dimensoes=" + dimensoes +
                 ", consumoDiarioBulb=" + consumoDiarioBulb +
@@ -150,13 +139,13 @@ public class SmartBulb extends SmartDevices {
     }
 
     /**
-     * The clone() method is used to create a copy of an object
+     * método clone()
      * 
-     * @return A new SmartBulb object with the same values as the original.
+     * @return nova smartbulb com os mesmos valores da original
      */
     @Override
     public SmartBulb clone() {
-        return new SmartBulb(isON, tonalidade, dimensoes, consumoDiarioBulb);
+        return new SmartBulb(this);
     }
 
     /**
@@ -171,15 +160,15 @@ public class SmartBulb extends SmartDevices {
      * 
      */
 
-    // alterar --> não incluir preço no calculo apenas quantidade de energia
+    
     public double consumoDiario() {
         double grauConsumo = 0.00;
-        if (this.tonalidade.equals("Neutral"))
-            grauConsumo = 1.13;
-
-        if (this.tonalidade.equals("Warm"))
-            grauConsumo = 1.25;
-
+        if (this.isON() == false);
+        else {
+            if (this.tonalidade.equals("Neutral")) grauConsumo = 1.13;
+            else if (this.tonalidade.equals("Warm")) grauConsumo = 1.25;
+            else grauConsumo = 1.10;
+        }
         return (grauConsumo * this.consumoDiarioBulb);
     }
 }

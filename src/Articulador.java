@@ -5,19 +5,25 @@ import java.util.stream.Collectors;
 
 public class Articulador implements Serializable {
 
-    // It's declaring the variables that will be used in the class.
+    /**
+     * Declarar as variaveis usadas na classe
+     */
     private Map<Integer, CasaInteligente> casas;
     private Map<Integer, Fornecedor> fornecedores;
     private Map<Integer, Fatura> faturas;
 
-    // It's the constructor of the class Articulador.
+    /**
+     * Construtor
+     */
     public Articulador() {
         this.casas = new HashMap<Integer, CasaInteligente>();
         this.fornecedores = new HashMap<Integer, Fornecedor>();
         this.faturas = new HashMap<Integer, Fatura>();
     }
 
-    // It's a copy constructor.
+    /**
+     * Construtor de copia
+     */
     public Articulador(Articulador ci) {
         setCasas(ci.getCasas());
         setFornecedores(ci.getFornecedores());
@@ -25,44 +31,36 @@ public class Articulador implements Serializable {
     }
 
     /**
-     * Return a map of all the houses in the city, where the key is the house's ID
-     * and the value is the
-     * house itself.
+     * Getter das Casas Inteligentes
      * 
-     * @return A copy of the map.
+     * @return Map das Casas Inteligentes.
      */
     public Map<Integer, CasaInteligente> getCasas() {
         return this.casas.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     /**
-     * Return a map of all the entries in the fornecedores map, where the key is the
-     * key of the entry
-     * and the value is the value of the entry.
+     * Getter dos Fornecedores
      * 
-     * @return A map with the key and value of the fornecedores map.
+     * @return Map de Fornecedores.
      */
     public Map<Integer, Fornecedor> getFornecedores() {
         return this.fornecedores.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     /**
-     * Return a map of all the invoices, where the key is the invoice id and the
-     * value is the invoice
-     * itself.
+     * Getter das Casas Inteligentes
      * 
-     * @return A copy of the map.
+     * @return Map das Casas Inteligentes.
      */
     public Map<Integer, Fatura> getFaturas() {
         return this.faturas.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     /**
-     * > This function sets the value of the variable `casas` to the value of the
-     * parameter `casas`
+     * Metodo que implementa Setter das Casas Inteligentes
      * 
-     * @param casas A map of all the houses in the system. The key is the house's
-     *              ID.
+     * @param Map Casas Inteligentes.
      */
     public void setCasas(Map<Integer, CasaInteligente> casas) {
         this.casas = new HashMap<>();
@@ -71,24 +69,20 @@ public class Articulador implements Serializable {
     }
 
     /**
-     * It sets the value of the fornecedores attribute to the value of the
-     * fornecedores parameter
+     * Metodo que implementa Setter dos Fornecedores
      * 
-     * @param fornecedores A map of fornecedores, where the key is the fornecedor's
-     *                     ID and the value is
-     *                     the fornecedor itself.
+     * @param Map Fornecedores.
      */
     public void setFornecedores(Map<Integer, Fornecedor> fornecedores) {
         this.fornecedores = new HashMap<>();
         fornecedores.entrySet().forEach(entry -> this.fornecedores.put(entry.getKey(), entry.getValue()));
-      // this.fornecedores=fornecedores;
+        // this.fornecedores=fornecedores;
     }
 
     /**
-     * It sets the value of the faturas attribute to the value of the faturas
-     * parameter
+     * Metodo que implementa Setter das Faturas
      * 
-     * @param faturas A map of all the invoices that are in the system.
+     * @param Map Faturas.
      */
     public void setFaturas(Map<Integer, Fatura> faturas) {
         this.faturas = new HashMap<>();
@@ -96,11 +90,9 @@ public class Articulador implements Serializable {
     }
 
     /**
-     * The function returns a string that contains the values of the variables
-     * casas, fornecedores and
-     * faturas
+     * Método que retorna uma String que contém as casas, fornecedores e faturas criadas
      * 
-     * @return The toString method is being returned.
+     * @return String.
      */
     public String toString() {
         return "CasaInteligente{" +
@@ -111,12 +103,7 @@ public class Articulador implements Serializable {
     }
 
     /**
-     * If the object is the same object, or if the object is not null and is of the
-     * same class, then
-     * check if the fields are equal
-     * 
-     * @param o the object to compare to
-     * @return The hashCode of the object.
+     * Método que testa igualdade de um objeto o
      */
     public boolean equals(Object o) {
         if (this == o)
@@ -130,72 +117,65 @@ public class Articulador implements Serializable {
     }
 
     /**
-     * This function returns a new Articulador object that is a copy of the
-     * Articulador object that
-     * called this function.
-     * 
-     * @return A new Articulador object with the same values as the original.
+     * Método que Clona Articulador
      */
     public Articulador clone() {
         return new Articulador(this);
     }
 
     /**
-     * It adds a supplier to the list of suppliers
+     * Método que adiciona fornecedor ao map associado
      * 
-     * @param fornecedor The fornecedor object to be added to the fornecedores
-     *                   HashMap.
+     * @param fornecedor Fornecedor a ser adicionado.
      */
     public void addFornecedor(Fornecedor fornecedor) {
-        this.fornecedores.put(fornecedor.getCode(), fornecedor);
+        this.fornecedores.put(fornecedor.clone().getCode(), fornecedor);
     }
 
     /**
-     * > This function checks if a supplier exists in the system
+     * Método que verifica se existe Fornecedor com dado código
      * 
-     * @param codigoFornecedor The supplier's code.
-     * @return A boolean value.
+     * @param codigoFornecedor Codigo do Fornecedor.
+     * @return se existe o fornecedor.
      */
     public boolean existeFornecedor(int codigoFornecedor) {
         return this.fornecedores.containsKey(codigoFornecedor);
     }
 
     /**
-     * It adds a house to the list of houses
+     * Método que adiciona casa ao map associado
      * 
-     * @param ci CasaInteligente object
+     * @param CasaInteligente Casa a ser adicionada.
      */
     public void addCasa(CasaInteligente ci) {
-        this.casas.put(ci.getCode(), ci);
+        this.casas.put(ci.clone().getCode(), ci);
     }
 
     /**
-     * > This function returns true if the house with the given code exists in the
-     * system
+     * Método que verifica se existe Casa com dado código
      * 
-     * @param codigoCasa The code of the house.
-     * @return A boolean value.
+     * @param codigoFornecedor Codigo da Casa.
+     * @return se existe a casa.
      */
     public boolean existeCasa(int codigoCasa) {
         return this.casas.containsKey(codigoCasa);
     }
 
     /**
-     * > Removes a house from the list of houses
+     * Método que remove casa ao map associado
      * 
-     * @param code The code of the house to be removed.
+     * @param CasaInteligente Casa a ser removida.
      */
     public void removeCasa(int code) {
         this.casas.remove(code);
     }
 
     /**
-     * Adds a Fatura to the map of Faturas.
+     * Método que adiciona Fatura ao map associado
      * 
-     * @param f Fatura object
+     * @param CasaInteligente Fatura a ser adicionada.
      */
     public void addFaturaToMap(Fatura f) {
         this.faturas.put(f.getCode(), f.clone());
     }
-
 }

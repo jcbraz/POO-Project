@@ -1,29 +1,44 @@
-// SmartCamera is a class that represents a smart camera
+
+/**
+*SmartCamera e uma classe que representa cameras inteligentes
+ */ 
 public class SmartCamera extends SmartDevices {
 
-    private static int counter = 0;
-    private boolean isON;
-    private int id;
-    private int resolution_x; // pixeis
-    private int resolution_y; // pixeis
+/**
+*Declaracao das variaveis de instancia do metodo smartcamera
+ */
+
+    private int resolution_x; 
+    private int resolution_y; 
     private double filesize;
     private float consumoDiarioCamera;
 
-    // The constructor of the class SmartCamera.
+    /**
+    *Construtor
+     */ 
     public SmartCamera() {
-        this.isON = false;
-        this.id = 0;
         this.resolution_x = 0;
         this.resolution_y = 0;
         this.filesize = 0.00;
         this.consumoDiarioCamera = 0;
     }
 
-    // It's a constructor.
-    public SmartCamera(boolean isON, int resolution_x, int resolution_y, double filesize, float consumoDiarioCamera) {
-        this.isON = isON;
-        this.id = counter;
-        counter++;
+    /**
+    * Construtor
+     */
+    public SmartCamera(SmartCamera camera) {
+        super(camera);
+        this.resolution_x = camera.resolution_x;
+        this.resolution_y = camera.resolution_y;
+        this.filesize = camera.filesize;
+        this.consumoDiarioCamera = camera.consumoDiarioCamera;
+    }
+
+    /**
+    *Construtor
+     */
+    public SmartCamera(boolean isON, float custoInstalacao, int resolution_x, int resolution_y, double filesize, float consumoDiarioCamera) {
+        super(isON, custoInstalacao);
         this.resolution_x = resolution_x;
         this.resolution_y = resolution_y;
         this.filesize = filesize;
@@ -31,124 +46,83 @@ public class SmartCamera extends SmartDevices {
     }
 
     /**
-     * This function returns a boolean value that indicates whether the light is on or off
+     * Getter da resolucao horizontal
      * 
-     * @return isON
-     */
-    public boolean isON() {
-        return isON;
-    }
-
-    /**
-     * This function returns the id of the object.
-     * 
-     * @return The id of the object.
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * This function returns the value of the variable resolution_x
-     * 
-     * @return The resolution_x variable is being returned.
+     * @return resolucao_x(horizontal)
      */
     public int getResolution_x() {
         return resolution_x;
     }
 
-    /**
-     * This function returns the value of the variable resolution_y
+     /**
+     * Getter da resolucao vertical
      * 
-     * @return The resolution_y variable is being returned.
+     * @return resolucao_y(vertical)
      */
     public int getResolution_y() {
         return resolution_y;
     }
 
     /**
-     * This function returns the filesize of the file
+     * Getter do tamanho do ficheiro resultante da gravacao
      * 
-     * @return The filesize of the file.
+     * @return tamanho do ficheiro
      */
     public double getFilesize() {
         return filesize;
     }
 
     /**
-     * This function returns the value of the variable consumoDiarioCamera
+     * Getter do consumo diario da camera
      * 
-     * @return The value of the variable consumoDiarioCamera.
+     * @return consumo diario camera 
      */
     public double getConsumoDiarioCamera() {
         return consumoDiarioCamera;
     }
 
-    /**
-     * This function sets the value of the isON variable to true.
-     */
-    public void setON() {
-        isON = true;
-    }
 
     /**
-     * This function sets the value of the isON variable to false.
-     */
-    public void setOFF() {
-        isON = false;
-    }
-
-    /**
-     * This function sets the id of the object to the value of the parameter id.
+     * Set da resolucao_x
      * 
-     * @param id The id of the user.
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
-     * This function sets the resolution_x variable to the value of the resolution_x parameter.
-     * 
-     * @param resolution_x The width of the image in pixels
+     * @param resolution_x resolucao da imagem horizontalmente em pixeis
      */
     public void setResolution_x(int resolution_x) {
         this.resolution_x = resolution_x;
     }
 
     /**
-     * This function sets the resolution_y variable to the value of the parameter resolution_y
+     * Set da resolucao_y
      * 
-     * @param resolution_y The height of the image in pixels.
+     * @param resolution_y resolucao da imagem verticalmente em pixeis
      */
     public void setResolution_y(int resolution_y) {
         this.resolution_y = resolution_y;
     }
 
     /**
-     * This function sets the filesize of the file
+     * Set do tamanho do ficheiro
      * 
-     * @param filesize The size of the file in bytes.
+     * @param filesize tamanho do ficheiro
      */
     public void setFilesize(double filesize) {
         this.filesize = filesize;
     }
 
     /**
-     * This function sets the value of the variable consumoDiarioCamera to the value of the parameter
-     * consumoDiarioCamera
+     * Set da variavel consumoDiarioCamera
      * 
-     * @param consumoDiarioCamera The daily consumption of the camera.
+     * @param consumoDiarioCamera consumo diario da camera
      */
     public void setConsumoDiarioCamera(float consumoDiarioCamera) {
         this.consumoDiarioCamera = consumoDiarioCamera;
     }
 
     /**
-     * It compares two objects of the same class.
+     * definicao do equals(verificar igualdade)
      * 
-     * @param o The object to compare with.
-     * @return The hashCode() method is overridden to return the hashCode of the id field.
+     * @param o objeto a ser comparado
+     * @return hashcode() metodo 
      */
     @Override
     public boolean equals(Object o) {
@@ -157,22 +131,21 @@ public class SmartCamera extends SmartDevices {
         if (o == null || getClass() != o.getClass())
             return false;
         SmartCamera that = (SmartCamera) o;
-        return isON == that.isON && id == that.id && resolution_x == that.resolution_x && resolution_y == that.resolution_y
+        return resolution_x == that.resolution_x && resolution_y == that.resolution_y
                 && Double.compare(that.filesize, filesize) == 0
                 && consumoDiarioCamera == that.consumoDiarioCamera;
     }
 
     /**
-     * The toString() method returns a string representation of the object
+     * metodo toString()
      * 
-     * @return The method toString() is being returned.
+     * @return concatenacao de strings
      */
     @Override
     public String toString() {
         return "SmartCamera{" +
-                "isON=" + isON +
-                "id=" + id +
-                "resolution_x=" + resolution_x +
+                "id =" + super.getId() +
+                ", resolution_x=" + resolution_x +
                 "resolution_y=" + resolution_y +
                 ", filesize=" + filesize +
                 ", consumoDiarioCamera=" + consumoDiarioCamera +
@@ -180,34 +153,43 @@ public class SmartCamera extends SmartDevices {
     }
 
     /**
-     * It returns a new object that is a copy of the current object
+     * metodo para clonar
      * 
-     * @return A new SmartCamera object with the same attributes as the original.
+     * @return nova smartcamera com os mesmos atributos da original
      */
     public SmartCamera clone() {
-        return new SmartCamera(this.isON, this.resolution_x, this.resolution_y, this.filesize, this.consumoDiarioCamera);
+        return new SmartCamera(this);
     }
 
     /**
-     * It returns the daily consumption of the camera, based on the resolution of the camera
+     * Metodo que calcula o consumo diario tendo como base a resolucao da camera
      * 
-     * @return The method returns the daily consumption of the camera.
+     * @return consumo diario da camera
      */
     public double consumoDiario() {
-        double grauConsumo = 0.00;
-        if (this.resolution_x == 640 && this.resolution_y == 480)
-            grauConsumo = (this.resolution_x * this.resolution_y * this.filesize * 0.001 * 0.001 * 0.0005);
-        else if (this.resolution_x == 1280 && this.resolution_y == 720)
-            grauConsumo = (this.resolution_x * this.resolution_y * this.filesize * 0.001 * 0.001 * 0.0005);
-        else if (this.resolution_x == 1920 && this.resolution_y == 1080)
-            grauConsumo = (this.resolution_x * this.resolution_y * this.filesize * 0.001 * 0.001 * 0.0005);
-        else if (this.resolution_x == 3840 && this.resolution_y == 2160)
-            grauConsumo = (this.resolution_x * this.resolution_y * this.filesize * 0.001 * 0.001 * 0.0005);
+        if (this.isON() == false)
+            return 0.00;
         else {
-            System.out.println("Introduza uma resolução válida");
-            return -1;
+            double grauConsumo = 0.00;
+            if (this.resolution_x == 640 && this.resolution_y == 480)
+                grauConsumo = (this.resolution_x * this.resolution_y * this.filesize * 0.001 * 0.001 * 0.0005);
+            else if (this.resolution_x == 1024 && this.resolution_y == 768)
+                grauConsumo = (this.resolution_x * this.resolution_y * this.filesize * 0.001 * 0.001 * 0.0005);
+            else if (this.resolution_x == 1280 && this.resolution_y == 768)
+                grauConsumo = (this.resolution_x * this.resolution_y * this.filesize * 0.001 * 0.001 * 0.0005);
+            else if (this.resolution_x == 1366 && this.resolution_y == 768)
+                grauConsumo = (this.resolution_x * this.resolution_y * this.filesize * 0.001 * 0.001 * 0.0005);
+            else if (this.resolution_x == 1920 && this.resolution_y == 1080)
+                grauConsumo = (this.resolution_x * this.resolution_y * this.filesize * 0.001 * 0.001 * 0.0005);
+            else if (this.resolution_x == 2160 && this.resolution_y == 1440)
+                grauConsumo = (this.resolution_x * this.resolution_y * this.filesize * 0.001 * 0.001 * 0.0005);
+            else if (this.resolution_x == 3840 && this.resolution_y == 2160)
+                grauConsumo = (this.resolution_x * this.resolution_y * this.filesize * 0.001 * 0.001 * 0.0005);
+            else {
+                System.out.println("Introduza uma resolução válida");
+                return -1;
+            }
+            return (grauConsumo * this.consumoDiarioCamera);
         }
-
-        return (grauConsumo * this.consumoDiarioCamera);
     }
 }

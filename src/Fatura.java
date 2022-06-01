@@ -3,7 +3,7 @@ import java.time.LocalDate;
 
 public class Fatura implements Serializable {
 
-    // Declaring the variables that will be used in the class.
+    // Variáveis
     private static int counter = 0;
     private LocalDate dataInicio;
     private LocalDate dataFim;
@@ -14,7 +14,9 @@ public class Fatura implements Serializable {
     private int codigoCasa;
     private int code;
 
-    // The default constructor.
+    /**
+     * Construtor
+     */
     public Fatura() {
         this.dataInicio = LocalDate.now();
         this.dataFim = LocalDate.now();
@@ -26,7 +28,9 @@ public class Fatura implements Serializable {
         this.code = 0;
     }
 
-    // A constructor that receives the parameters and assigns them to the variables.
+    /**
+     * Construtor
+     */
     public Fatura(LocalDate dateinicio, LocalDate datefim, int codefornecedor, int nifCliente, double consumo,
             double custo, int codigoCasa) {
         this.dataInicio = dateinicio;
@@ -40,158 +44,166 @@ public class Fatura implements Serializable {
     }
 
     /**
-     * > This function returns the date of the beginning of the project
+     * Construtor
+     */
+    public Fatura(Fatura fat) {
+        this.dataInicio = fat.dataInicio;
+        this.dataFim = fat.dataFim;
+        this.codefornecedor = fat.codefornecedor;
+        this.nifCliente = fat.nifCliente;
+        this.consumo = fat.consumo;
+        this.custo = fat.custo;
+        this.codigoCasa = fat.codigoCasa;
+        this.code = fat.code;
+    }
+
+    /**
+     * Método que retorna data inicial
      * 
-     * @return The date of the beginning of the project.
+     * @return Data Inicial
      */
     public LocalDate getDateInicio() {
         return this.dataInicio;
     }
 
     /**
-     * This function returns the end date of the event
+     * Método que retorna data final
      * 
-     * @return The end date of the period.
+     * @return Data Final
      */
     public LocalDate getDateFim() {
         return this.dataFim;
     }
 
     /**
-     * This function returns the value of the variable codefornecedor
+     * Método que implementa o getter de um Fornecedor
      * 
-     * @return The method getFornecedor is returning the value of the variable codefornecedor.
+     * @return Codigo do Fornecedor
      */
     public int getFornecedor() {
         return this.codefornecedor;
     }
 
     /**
-     * > This function returns the nifCliente of the object
+     * Método que implementa o getter de um NIF de um cliente
      * 
-     * @return The nifCliente variable.
+     * @return NIF cliente
      */
     public int getNifCliente() {
         return this.nifCliente;
     }
 
     /**
-     * This function returns the value of the variable "consumo"
+     * Método que implementa o getter do Consumo
      * 
-     * @return The consumption of the vehicle.
+     * @return Consumo
      */
     public double getConsumo() {
         return this.consumo;
     }
 
     /**
-     * This function returns the value of the variable custo
+     * Método que implementa o getter do custo
      * 
-     * @return The cost of the item.
+     * @return Custo
      */
     public double getCusto() {
         return this.custo;
     }
 
     /**
-     * > This function returns the value of the variable codigoCasa
+     * Método que implementa o getter do codigo de uma casa
      * 
-     * @return The method is returning the value of the variable codigoCasa.
+     * @return Codigo da casa
      */
     public int getCodigoCasa() {
         return this.codigoCasa;
     }
 
     /**
-     * > This function returns the code of the current object
-     * 
-     * @return The code of the enum.
+     * Método auxiliar à obtenção do código do fornecedor
      */
     public int getCode() {
         return this.code;
     }
 
     /**
-     * It sets the dateInicio variable to the value of the dateInicio parameter
+     * Método que implementa o setter da data inicial
      * 
-     * @param dateInicio The date that the user wants to start the search.
+     * @return Data Inicial
      */
     public void setDateInicio(LocalDate dateInicio) {
         this.dataInicio = dateInicio;
     }
 
     /**
-     * The function setDateFim() sets the dateFim variable to the value of the parameter dateFim
+     * Método que setorna data final
      * 
-     * @param dateFim The end date of the period.
+     * @return Data Final
      */
     public void setDateFim(LocalDate dateFim) {
         this.dataFim = dateFim;
     }
 
     /**
-     * This function sets the value of the variable codefornecedor to the value of the variable
-     * codefornecedor
+     * Método que implementa o setter de um Fornecedor
      * 
-     * @param codefornecedor The code of the supplier
+     * @return Codigo do Fornecedor
      */
     public void setFornecedor(int codefornecedor) {
         this.codefornecedor = codefornecedor;
     }
 
     /**
-     * This function sets the nifCliente variable to the value of the parameter nifCliente
+     * Método que implementa o setter de um NIF de um cliente
      * 
-     * @param nifCliente The client's NIF.
+     * @return NIF cliente
      */
     public void setNifCliente(int nifCliente) {
         this.nifCliente = nifCliente;
     }
 
     /**
-     * This function sets the value of the variable consumo to the value of the parameter consumo
+     * Método que implementa setter do Consumo
      * 
-     * @param consumo the amount of energy consumed by the appliance
+     * @return Consumo
      */
     public void setConsumo(double consumo) {
         this.consumo = consumo;
     }
 
     /**
-     * This function sets the value of the custo variable to the value of the custo parameter.
+     * Método que implementa o setter do custo
      * 
-     * @param custo The cost of the item.
+     * @return Custo
      */
     public void setCusto(double custo) {
         this.custo = custo;
     }
 
     /**
-     * This function sets the value of the variable codigoCasa to the value of the parameter codigoCasa
+     * Método que implementa o setter do codigo de uma casa
      * 
-     * @param codigoCasa The house code.
+     * @return Codigo da casa
      */
     public void setCodigoCasa(int codigoCasa) {
         this.codigoCasa = codigoCasa;
     }
 
     /**
-     * This function sets the code variable to the value of the code parameter.
-     * 
-     * @param code The HTTP status code.
+     * Método auxiliar à obtenção do código do fornecedor
      */
     public void setCode(int code) {
         this.code = code;
     }
 
-    /** 
-     * It returns a new object with the same attributes as the object it was called on
+    /**
+     * Método que gera clone de Fatura
      * 
-     * @return A new Fatura object with the same attributes as the original.
+     * @return Fatura.
      */
     public Fatura clone() {
-        return new Fatura(this.dataInicio, this.dataFim, this.codefornecedor, this.nifCliente, this.consumo, this.custo, this.codigoCasa);
+        return new Fatura(this);
     }
-
 
 }

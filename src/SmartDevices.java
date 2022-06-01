@@ -1,22 +1,43 @@
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+*Classe Smartdevices é relstiva a estes mesmos dispositivos e um pouco geral, dado que os 
+*metodos implementados devem adequar se a bulbs, cameras e speakers
+ */
+
 public abstract class SmartDevices implements Serializable {
 
-    // The attributes of the class SmartDevices
+    /**
+    *Variaveis de instancia da classe
+     */
     private static int counter = 0;
     private boolean isON;
     private int id;
     private float custoInstalacao;
 
-    // A constructor that initializes the attributes of the class SmartDevices.
+    /**
+    *Construtor
+     */
     public SmartDevices() {
         this.isON = false;
         this.id = 0;
         this.custoInstalacao = 0;
     }
 
-    // A constructor that initializes the attributes of the class SmartDevices.
+    /**
+    *Construtor
+     */
+
+    public SmartDevices(SmartDevices device) {
+        this.isON = device.isON;
+        this.id = device.id;
+        this.custoInstalacao = device.custoInstalacao;
+    }
+
+    /**
+    *Construtor
+     */
     public SmartDevices(boolean isON, float custoInstalacao) {
         this.isON = isON;
         this.id = counter;
@@ -25,95 +46,96 @@ public abstract class SmartDevices implements Serializable {
     }
 
     /**
-     * If this is a SmartBulb, return true, otherwise return false.
+     * metodo que verifica se um objeto é lampada
      * 
-     * @return A boolean value.
+     * @return boolean
      */
     public boolean isBulb() {
         return this instanceof SmartBulb;
     }
 
     /**
-     * If this object is a SmartSpeaker, return true, otherwise return false.
+     * metodo que verifica se um objeto é speaker
      * 
-     * @return A boolean value.
+     * @return boolean
      */
     public boolean isSpeaker() {
         return this instanceof SmartSpeaker;
     }
 
     /**
-     * If this object is a SmartCamera, return true, otherwise return false.
+     * método que verifica se um objeto é camera
      * 
-     * @return A boolean value.
+     * @return boolean
      */
     public boolean isCamera() {
         return this instanceof SmartCamera;
     }
 
     /**
-     * This function returns the value of the isON variable.
+     * metodo que verifica se determinado dispositivo está ligado
      * 
-     * @return isON
+     * @return boolean
      */
     public boolean isON() {
         return isON;
     }
 
     /**
-     * This function returns the id of the object
+     * getter do id do device
      * 
-     * @return The id of the object.
+     * @return id
      */
     public int getId() {
         return id;
     }
 
     /**
-     * > This function returns the value of the variable custoInstalacao
+     *  getter do custo de instalacao
      * 
-     * @return The value of the variable custoInstalacao.
+     * @return o valor da variavel custoInstalacao
      */
     public float getCustoInstalacao() {
         return custoInstalacao;
     }
 
-    // This function sets the value of the isON variable to true.
+    /**
+    *metodo que da set de isON para true
+     */
     public void setON() {
         isON = true;
     }
 
-    // This function sets the value of the isON variable to false.
+    /**
+    *metodo que da set de isON para falso
+    */ 
     public void setOFF() {
         isON = false;
     }
 
     /**
-     * This function sets the id of the object to the value of the parameter id.
+     * setter do id
      * 
-     * @param id The id of the user.
+     * @param id id do dispositivo
      */
     public void setId(int id) {
         this.id = id;
     }
 
     /**
-     * This function sets the value of the variable custoInstalacao to the value of the parameter
-     * custoInstalacao
+     * setter do custo de instalacao
      * 
-     * @param custoInstalacao The cost of installing the equipment.
+     * @param custoInstalacao custo de instalacao
      */
     public void setCustoInstalacao(float custoInstalacao) {
         this.custoInstalacao = custoInstalacao;
     }
 
     /**
-     * The function returns true if the object passed as a parameter is the same as the object that
-     * called the function, or if the object passed as a parameter is not null and is of the same class
-     * as the object that called the function
+     * implementacao do metodo equals()
      * 
-     * @param o The object to compare with.
-     * @return The hashCode() method is overridden to return the hashCode of the id field.
+     * @param o o objeto a ser comparado
+     * @return hashcode()
      */
     @Override
     public boolean equals(Object o) {
@@ -127,9 +149,9 @@ public abstract class SmartDevices implements Serializable {
     }
 
     /**
-     * The toString() method returns a string representation of the object
+     *implementacao do metodo toString()
      * 
-     * @return The method toString() is being returned.
+     * @return concatenacao de strings
      */
     @Override
     public String toString() {
@@ -141,16 +163,16 @@ public abstract class SmartDevices implements Serializable {
     }
 
     /**
-     * The clone() function is used to create a copy of an object
+     * implementacao do metodo clone
      * 
-     * @return A new object of the same type as the object that called the method.
+     * @return novo objeto mas do mesmo tipo do objeto clonado
      */
     public abstract SmartDevices clone();
 
     /**
-     * Returns the amount of energy consumed by the appliance in one day.
+     * metodo que da return do consumo diario
      * 
-     * @return The method is returning the value of the variable consumoDiario.
+     * @return return de consumo diario
      */
     public abstract double consumoDiario();
 }

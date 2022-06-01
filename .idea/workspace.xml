@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c9d5fc02-9f49-4dd0-b318-078f6b2f109a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/Articulador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Articulador.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CasaInteligente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CasaInteligente.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fatura.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fatura.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Fornecedor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Fornecedor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MainMethods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MainMethods.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SmartBulb.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SmartBulb.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SmartCamera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SmartCamera.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SmartDevices.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SmartDevices.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SmartSpeaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SmartSpeaker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/estado.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/estado.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tempCodeRunnerFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tempCodeRunnerFile.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="29UVddF9hKbVBvnKAfHbNgoLuOq" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/home/josecbraz/Desktop/POO-project"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c9d5fc02-9f49-4dd0-b318-078f6b2f109a" name="Changes" comment="" />
+      <created>1653167742275</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1653167742275</updated>
+      <workItem from="1653167747646" duration="70000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

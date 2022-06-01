@@ -1,202 +1,211 @@
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Fornecedor implements Serializable{
+/**
+* Classe que implementa metodos para o fornecedor
+ */
+
+public class Fornecedor implements Serializable {
+
+    /**
+    *Variaveis de instancia da classe fornecedor
+     */
     private static int counter = 0;
     private String nomeFornecedor;
     private int code;
     private final double valorBase = 0.15; // preco por kWh
     private final double tax = 1.06; // taxa de IVA
     private ArrayList<Integer> codigosFaturas;
-    private HashMap<Integer, CasaInteligente> clientes;
+    private ArrayList<Integer> codigoClientes;
 
-    // It's a constructor.
+    /**
+    *Construtor
+     */
     public Fornecedor() {
         this.nomeFornecedor = "";
-        this.code = 0;
-        this.codigosFaturas = new ArrayList<Integer>();
-        this.clientes = new HashMap<Integer, CasaInteligente>();
-    }
-
-    // It's a constructor.
-    public Fornecedor(String nomeFornecedor) {
-        this.nomeFornecedor = nomeFornecedor;
         this.code = counter++;
         this.codigosFaturas = new ArrayList<Integer>();
-        this.clientes = new HashMap<Integer, CasaInteligente>();
+        this.codigoClientes = new ArrayList<Integer>();
     }
 
     /**
-     * This function returns the name of the supplier
+    *Construtor
+     */
+
+    public Fornecedor(String nomeFornecedor, int code, ArrayList<Integer> codigosFaturas,
+            Map<Integer, CasaInteligente> clientes) {
+        this.nomeFornecedor = nomeFornecedor;
+        this.code = code;
+        setCodigosFaturas(codigosFaturas);
+        setCodigoClientes(codigoClientes);
+    }
+
+    /**
+    * Construtor
+     */
+    public Fornecedor(Fornecedor forneceai) {
+        this.nomeFornecedor = forneceai.nomeFornecedor;
+        this.code = forneceai.code;
+        this.codigosFaturas = new ArrayList<Integer>();
+        forneceai.codigosFaturas.forEach(codigo -> this.codigosFaturas.add(codigo));
+        this.codigoClientes = new ArrayList<Integer>();
+        forneceai.codigoClientes.forEach(codigo -> this.codigoClientes.add(codigo));
+    }
+
+    /**
+     * Getter do nome do fornecedor
      * 
-     * @return The name of the supplier.
+     * @return nome do fornecedor
      */
     public String getNomeFornecedor() {
         return this.nomeFornecedor;
     }
 
     /**
-     * This function returns an ArrayList of Integers that contains the codes of the
-     * invoices.
+     * getter da lista dos codigos das faturas
      * 
-     * @return The method returns an ArrayList of Integers.
+     * @return arraylist de inteiros que sao os codigos das faturas
      */
     public ArrayList<Integer> getCodigosDeFaturas() {
         return this.codigosFaturas.stream().collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
-     * This function returns the clientes attribute of the object
-     * 
-     * @return A HashMap of CasaInteligente objects.
+    * getter do codigo dos clientes
+    * @return codigos de clientes
      */
-    public HashMap<Integer, CasaInteligente> getClientes() {
-        return this.clientes;
+
+    public ArrayList<Integer> getCodigoClientes() {
+        return this.codigoClientes.stream().collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
-     * > This function returns the code of the current object
+     * getter do codigode fornecedor
      * 
-     * @return The code of the enum.
+     * @return codigo de fornecedor
      */
     public int getCode() {
         return this.code;
     }
 
     /**
-     * This function sets the name of the supplier
+    * getter do preco base por kWh
+    ** @return valor base
+     */
+
+    public double getValorBase() {
+        return valorBase;
+    }
+
+    /**
+    * getter da taxa de iva
+    ** @return taxa de iva
+     */
+
+    public double getTax() {
+        return tax;
+    }
+
+    /**
+     * setter do nome do fornecedor
      * 
-     * @param fornecedor The name of the supplier.
+     * @param fornecedor nome do fornecedor
      */
     public void setNomeFornecedor(String fornecedor) {
         this.nomeFornecedor = fornecedor;
     }
 
     /**
-     * This function sets the code of the object to the value of the parameter.
+     * setter do codigo do fornecedor
      * 
-     * @param code The code to be returned to the client.
+     * @param code codigo do fornecedor
      */
     public void setCode(int code) {
         this.code = code;
     }
 
     /**
-     * The toString() method returns a string representation of the object
+    *setter dos codigos de faturas
+    * @param codigosFaturas arraylist com os codigos de fatura
+    *
+     */
+
+    public void setCodigosFaturas(ArrayList<Integer> codigosFaturas) {
+        this.codigosFaturas = new ArrayList<Integer>();
+        codigosFaturas.forEach(codigo -> this.codigosFaturas.add(codigo));
+    }
+
+     /**
+    *setter dos codigos de cliente
+    * @param codigosFaturas arraylist com os codigos de cliente
+    *
+     */
+
+    public void setCodigoClientes(ArrayList<Integer> codigoClientes) {
+        this.codigoClientes = new ArrayList<Integer>();
+        codigoClientes.forEach(codigo -> this.codigoClientes.add(codigo));
+    }
+
+    /**
+     * implementacao do metodo toString()
      * 
-     * @return The name of the supplier, the code and the list of customers.
+     * @return string
      */
     public String toString() {
         return "Fornecedor{" +
                 "nomeFornecedor='" + nomeFornecedor + '\'' +
                 ", code='" + code + '\'' +
-                ", clientes=" + clientes +
+                ", codigoClientes=" + codigoClientes +
                 '}';
     }
 
     /**
-     * This function returns a new object that is a copy of the object that called
-     * the function.
+     * implementacao do metodo clone()
      * 
-     * @return A new object of type Fornecedor with the same name as the original.
+     * @return novo fornecedor com os mesmos dados do antigo
      */
     public Fornecedor clone() {
-        return new Fornecedor(this.nomeFornecedor);
+        return new Fornecedor(this);
     }
 
     /**
-     * It adds a client to the list of clients
-     * 
-     * @param cliente The client to be added to the list of clients.
+     * Adiciona um cliente 
+     *
+     * @param cliente o cliente a ser adicionado aos clientes
      */
     public void addCliente(CasaInteligente cliente) {
-        this.clientes.put(cliente.getCode(), cliente);
+        this.codigoClientes.add(cliente.getCode());
     }
 
     /**
-     * It removes a client from the list of clients
+     * Remove um cliente 
      * 
-     * @param cliente The client to be removed.
+     * @param cliente cliente a ser removido
      */
     public void removeCliente(CasaInteligente cliente) {
-        this.clientes.remove(cliente.getCode());
+        this.codigoClientes.remove(cliente.getCode());
     }
 
     /**
-     * It returns the total price of the energy consumed by a client in a day
+     * metodo que calcula o preco total diario de um determinado cliente com base
+     * nos consumos de sua casa
      * 
-     * @param code the client's code
-     * @return The total price of the energy consumed by the client in a day.
+     * @param code codigo de cliente
+     * @return preco total de energia consumida diariamente
      */
-    public double precoTotalDiarioCliente(int code) {
-        return (valorBase * this.clientes.get(code).energiaTotalDiariaCasa() * tax) * 0.9;
+    public double precoTotalDiarioCliente(CasaInteligente casa) {
+        return (valorBase * casa.energiaTotalDiariaCasa() * tax) * 0.9;
     }
 
     /**
-     * Return the house with the highest daily energy consumption.
+     * Adiciona uma fatura
      * 
-     * @return The house with the highest consumption of energy.
+     * @param codefatura fatura a ser adicionada
      */
-    public CasaInteligente casaComMaiorConsumoDoFornecedor() {
-        double maiorConsumo = 0.00;
-        CasaInteligente casaComMaiorConsumo = new CasaInteligente();
-        for (CasaInteligente casa : clientes.values()) {
-            if (casa.energiaTotalDiariaCasa() > maiorConsumo) {
-                maiorConsumo = casa.energiaTotalDiariaCasa();
-                casaComMaiorConsumo = casa;
-            }
-        }
-        return casaComMaiorConsumo;
-    }
 
-    /**
-     * It creates a new invoice for a client, given the client's NIF, the start and
-     * end dates of the
-     * invoice, the total energy consumption of the client's house, the total cost
-     * of the invoice, and
-     * the code of the client's house
-     * 
-     * @param nifCliente the client's NIF
-     * @param dateinicio the start date of the bill
-     * @param datefim    end date of the invoice
-     * @param consumo    the total energy consumption of the client's house
-     * @param custo      the cost of the energy consumed by the client
-     * @param codigoCasa the code of the house
-     * @return A new Fatura object is being returned.
-     */
-    public Fatura criaFatura(int nifCliente, LocalDate dateinicio, LocalDate datefim, double consumo, double custo,
-            int codigoCasa) {
-        double consumoTotal = this.clientes.values().stream().mapToDouble(c -> c.energiaTotalDiariaCasa()).sum();
-        int days = (int) ChronoUnit.DAYS.between(dateinicio, datefim);
-        double custoTotal = this.precoTotalDiarioCliente(code) * days;
-        return new Fatura(dateinicio, datefim, code, nifCliente, consumoTotal, custoTotal, codigoCasa);
-    }
-
-    /**
-     * It adds a bill to the list of bills of a client
-     * 
-     * @param fatura the invoice to be added
-     */
-    public void addFaturaClienteAL(Fatura fatura) {
-        this.codigosFaturas.add(fatura.getCode());
-        this.clientes.get(fatura.getCodigoCasa()).addFatura(fatura.clone().getCode());
-    }
-
-    /**
-     * It calculates the total amount of money that the company has to pay to the
-     * suppliers
-     * 
-     * @return The total value of the energy consumed by all houses.
-     */
-    public double faturacaoFornecedor() {
-        double valorTotal = 0.00;
-        for (CasaInteligente casa : clientes.values()) {
-            valorTotal += (casa.energiaTotalDiariaCasa() * valorBase * tax) * 0.9;
-        }
-        return valorTotal;
+    public void addFatura(int codefatura) {
+        this.codigosFaturas.add(codefatura);
     }
 }

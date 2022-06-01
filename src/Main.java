@@ -10,16 +10,13 @@ import java.util.Map;
 import java.time.temporal.ChronoUnit;
 
 public class Main {
-
-    // Bugs a avançar no tempo -> consumos == -1?
-    // Bugs na última estatística -> vazio
     public static void main(String[] args) {
         MainMethods mainMethods = new MainMethods();
         Scanner sc = new Scanner(System.in);
         Scanner sc2 = new Scanner(System.in);
         String input = new String();
         boolean opcao_sair = false;
-        int opcao;
+        int opcao, cF = 1;
 
         System.out.println("Bem Vindo ao Smart Home System!\n\n");
 
@@ -36,8 +33,8 @@ public class Main {
                                 "7 - Alterar o Fornecedor de uma dada Casa Inteligente,\n" +
                                 "8 - Avançar para determinada data & Gerar Fatura.\n" +
                                 "9 - Consultar estatísticas de consumo,\n" +
-                               "10 - Salvar Estado do Programa\n" +
-                               "11 - Carregar um Estado de Programa\n");
+                                "10 - Salvar Estado do Programa\n" +
+                                "11 - Carregar um Estado de Programa\n");
                 try {
                     while (!sc.hasNextInt()) {
                         sc.next();
@@ -54,7 +51,8 @@ public class Main {
                     System.out.println("Insira o nome do fornecedor: \n");
                     String nome = sc.next();
                     mainMethods.criaFornecedor(nome);
-                    System.out.println("Fornecedor criado com sucesso! O código é: " + mainMethods.getCodeFornecedor());
+                    System.out.println("Fornecedor criado com sucesso! O código é: " + cF);
+                    cF++;
                     break;
 
                 case 2:
@@ -71,20 +69,24 @@ public class Main {
                             "Morada da casa: \n");
                     sc.nextLine();
                     String morada = sc.nextLine();
-                    mainMethods.criaCasa(nomeProprietario, nifProprietario, morada);
                     System.out.println(
                             "Qual o código do fornecedor da casa?\n" + "Os fornecedores disponíveis até ao momentos são"
                                     + mainMethods.getArt().getFornecedores());
 
                     int codigoFornecedor = sc.nextInt();
                     System.out.println();
-                    if (!mainMethods.existeFornecedoremArticulador(codigoFornecedor)) {
+                    if (!mainMethods.existeFornecedor(codigoFornecedor)) {
                         System.out.println(
                                 "Fornecedor não existe. Por favor, crie o fornecedor primeiro.\n");
                     } else {
+                        mainMethods.criaCasa(nomeProprietario, nifProprietario, morada, codigoFornecedor);
                         try {
                             System.out.println("Casa criada com sucesso!\n");
-                            mainMethods.addCasaToFornecedor();
+                            int codigoCasa = mainMethods.addCasaToFornecedor(codigoFornecedor);
+                            mainMethods.criaDivisao(codigoCasa, "Sala", new HashMap<Integer, SmartDevices>());
+                            mainMethods.criaDivisao(codigoCasa, "Quarto", new HashMap<Integer, SmartDevices>());
+                            mainMethods.criaDivisao(codigoCasa, "Cozinha", new HashMap<Integer, SmartDevices>());
+                            mainMethods.criaDivisao(codigoCasa, "Casa de Banho", new HashMap<Integer, SmartDevices>());
                         } catch (Exception e) {
                             System.out.println(
                                     e.getMessage());
@@ -101,10 +103,6 @@ public class Main {
                                 "Casa não existe. Por favor, crie a casa primeiro.\n");
                         break;
                     } else {
-                        mainMethods.criaDivisao(codigoCasa,"Sala", new HashMap<Integer, SmartDevices>());
-                        mainMethods.criaDivisao(codigoCasa,"Quarto", new HashMap<Integer, SmartDevices>());
-                        mainMethods.criaDivisao(codigoCasa,"Cozinha", new HashMap<Integer, SmartDevices>());
-                        mainMethods.criaDivisao(codigoCasa,"Casa de Banho", new HashMap<Integer, SmartDevices>());
                         System.out.println("Insira a divisão que pretende selecionar/criar.\n"
                                 + "As divisões disponíveis até ao momentos são: \n"
                                 + mainMethods.getArt().getCasas().get(codigoCasa).getDivisoes());
@@ -125,7 +123,7 @@ public class Main {
                                 }
                             } while (resposta < 1 || resposta > 2);
                             if (resposta == 1) {
-                                mainMethods.criaDivisao(codigoCasa,divisao, new HashMap<Integer, SmartDevices>());
+                                mainMethods.criaDivisao(codigoCasa, divisao, new HashMap<Integer, SmartDevices>());
                                 System.out.println("Divisão criada com sucesso!");
                             } else
                                 System.out.println("Divisão não adicionada.\n");
@@ -146,17 +144,57 @@ public class Main {
                             } while (tipo < 1 || tipo > 3);
                             if (tipo == 1) {
                                 System.out.println("Insira os dados para a criação da lampada:\n");
-                                System.out.println(": Insira a tonalidade (Cold, Neutral ou Warm)\n");
-                                String tonalidade = sc.next();
-                                System.out.println("Insira as dimensões\n");
+                                int tonalidadeN = 0;
+                                String tonalidade = new String();
+                                do {
+                                    System.out.println("Qual o tipo de dispositivo?\n" + "1 - Warm\n" + "2 - Neutral\n"
+                                            + "3 - Cold\n");
+                                    try {
+                                        tonalidadeN = sc.nextInt();
+                                    } catch (Exception e) {
+                                        System.out.println(
+                                                "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
+                                        tonalidadeN = 0;
+                                    }
+
+                                } while (tonalidadeN < 1 || tonalidadeN > 3);
+                                if (tonalidadeN == 1)
+                                    tonalidade = "Warm";
+                                else if (tonalidadeN == 2)
+                                    tonalidade = "Neutral";
+                                else
+                                    tonalidade = "Cold";
+                                System.out.println("Insira o custo de instalação da Bulb.\n");
+                                float custoInstalacaoBulb = sc.nextFloat();
+                                System.out.println("Insira as dimensões (em cms)\n");
                                 double dimensao = sc.nextDouble();
                                 System.out.println(
                                         "Insira o consumo diário do dispositivo (em KWh (com vírgula em caso de número decimal.))\n");
                                 consumo = sc.nextFloat();
-                                mainMethods.criaBulb(false, tonalidade, dimensao, consumo, divisao);
+                                int ligadoB = 0;
+                                do {
+                                    System.out.println(
+                                            "\nDeseja ligar o dispositivo mal este seja adicionado à casa?\n"
+                                                    + "1 - Sim\n" + "2 - Não\n");
+                                    try {
+                                        ligadoB = sc.nextInt();
+                                    } catch (Exception e) {
+                                        System.out.println(
+                                                "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
+                                        tipo = 0;
+                                    }
+                                } while (ligadoB < 1 || ligadoB > 2);
+                                if (ligadoB == 1)
+                                    mainMethods.criaBulb(true, custoInstalacaoBulb, tonalidade, dimensao, consumo,
+                                            codigoCasa, divisao);
+                                else
+                                    mainMethods.criaBulb(false, custoInstalacaoBulb, tonalidade, dimensao, consumo,
+                                            codigoCasa, divisao);
                             } else if (tipo == 2) {
                                 System.out.println("Insira os dados para a criação do speaker:\n");
-                                System.out.println(": Insira o volume inicial\n");
+                                System.out.println("Insira o custo de instalação do Speaker.\n");
+                                float custoInstalacaoSpeaker = sc.nextFloat();
+                                System.out.println("Insira o volume inicial\n");
                                 int volume = sc.nextInt();
                                 System.out.println("Insira o nome da Rádio\n");
                                 String nomeRadio = sc.next();
@@ -165,9 +203,29 @@ public class Main {
                                 System.out.println(
                                         "Insira o consumo diário do dispositivo (em KWh (com vírgula em caso de número decimal.))\n");
                                 consumo = sc.nextFloat();
-                                mainMethods.criaSpeaker(false, volume, nomeRadio, marca, consumo, divisao);
+                                int ligadoS = 0;
+                                do {
+                                    System.out.println(
+                                            "\nDeseja ligar o dispositivo mal este seja adicionado à casa?\n"
+                                                    + "1 - Sim\n" + "2 - Não\n");
+                                    try {
+                                        ligadoS = sc.nextInt();
+                                    } catch (Exception e) {
+                                        System.out.println(
+                                                "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
+                                        tipo = 0;
+                                    }
+                                } while (ligadoS < 1 || ligadoS > 2);
+                                if (ligadoS == 1)
+                                    mainMethods.criaSpeaker(true, custoInstalacaoSpeaker, volume, nomeRadio, marca,
+                                            consumo, codigoCasa, divisao);
+                                else
+                                    mainMethods.criaSpeaker(false, custoInstalacaoSpeaker, volume, nomeRadio, marca,
+                                            consumo, codigoCasa, divisao);
                             } else {
                                 System.out.println("Insira os dados para a criação da camera:\n");
+                                System.out.println("Insira o custo de instalação da Camera.\n");
+                                float custoInstalacaoCamera = sc.nextFloat();
                                 int opcaoCameraResolucao = 0, x = 0, y = 0;
                                 do {
                                     System.out.println("Indique a resolução que pretende\n" +
@@ -213,7 +271,25 @@ public class Main {
                                 System.out.println(
                                         "Insira o consumo diário do dispositivo (em KWh (com vírgula em caso de número decimal.))\n");
                                 consumo = sc.nextFloat();
-                                mainMethods.criaCamera(false, x, y, filesize, consumo, divisao);
+                                int ligadoC = 0;
+                                do {
+                                    System.out.println(
+                                            "\nDeseja ligar o dispositivo mal este seja adicionado à casa?\n"
+                                                    + "1 - Sim\n" + "2 - Não\n");
+                                    try {
+                                        ligadoC = sc.nextInt();
+                                    } catch (Exception e) {
+                                        System.out.println(
+                                                "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
+                                        tipo = 0;
+                                    }
+                                } while (ligadoC < 1 || ligadoC > 2);
+                                if (ligadoC == 1)
+                                    mainMethods.criaCamera(true, custoInstalacaoCamera, x, y, filesize, consumo,
+                                            codigoCasa, divisao);
+                                else
+                                    mainMethods.criaCamera(false, custoInstalacaoCamera, x, y, filesize, consumo,
+                                            codigoCasa, divisao);
                             }
                         }
                         break;
@@ -268,9 +344,9 @@ public class Main {
                             mainMethods.addPedido(pedido -> {
                                 pedido.removeCasaFromArt(codigoCasa);
                                 pedido.getArt().getFornecedores().values().forEach(fornecedor -> {
-                                    if (fornecedor.getClientes().containsKey(codigoCasa)) {
+                                    if (fornecedor.getCodigoClientes().contains(codigoCasa)) {
                                         pedido.removeCasaFromFornecedor();
-                                        System.out.println(fornecedor.getClientes());
+                                        System.out.println(fornecedor.getCodigoClientes());
                                     }
                                 });
                             });
@@ -290,7 +366,7 @@ public class Main {
                         try {
                             System.out.println("Qual o nome da divisão que se encontra o dispositivo?\n"
                                     + "As divisões disponíveis até ao momentos são"
-                                    + mainMethods.getCiWithCode(codigoCasa).getDivisoes());
+                                    + mainMethods.getArt().getCasas().get(codigoCasa).getDivisoes());
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
                         }
@@ -316,8 +392,9 @@ public class Main {
                             } while (opcaoDispositivos < 1 || opcaoDispositivos > 3);
                             if (opcaoDispositivos == 1) {
                                 try {
-                                    System.out.println(mainMethods.getDivisao(divisao).values().toString());
-                                } catch (DivisoesException e) {
+                                    System.out.println(mainMethods.getArt().getCasas().get(codigoCasa).getDivisoes()
+                                            .get(divisao).values());
+                                } catch (Exception e) {
                                     System.out.println(e.getMessage());
                                 }
                                 int codigoDispositivo = 0;
@@ -331,14 +408,22 @@ public class Main {
                                                 "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
                                         opcaoDispositivos = 0;
                                     }
-                                } while (!mainMethods.existeDispositivo(codigoDispositivo));
-                                if (mainMethods.getDeviceWithCode(codigoDispositivo).isBulb()) {
+                                } while (!mainMethods.getArt().getCasas().get(codigoCasa).getDivisoes().get(divisao)
+                                        .containsKey(codigoDispositivo));
+                                if (mainMethods.getArt().getCasas().get(codigoCasa).getDivisoes().get(divisao)
+                                        .get(codigoDispositivo).isBulb()) {
                                     int opcaoBulb = 0;
                                     do {
                                         System.out.println("O que pretende alterar?\n" +
                                                 "1 - Ligar/Desligar a lâmpada\n" +
                                                 "2 - Alterar a tonalidade\n" +
                                                 "3 - Alterar o consumo diário\n");
+                                        String estado = new String();
+                                        if (mainMethods.getDeviceWithCode(codigoDispositivo).isON()) {
+                                            estado = "ligado";
+                                        } else
+                                            estado = "desligado";
+                                        System.out.println("O dispositivo está " + estado + ".\n");
                                         try {
                                             opcaoBulb = sc.nextInt();
                                         } catch (Exception e) {
@@ -348,7 +433,8 @@ public class Main {
                                         }
                                     } while (opcaoBulb < 1 || opcaoBulb > 3);
                                     if (opcaoBulb == 1) {
-                                        if (mainMethods.getDeviceWithCode(codigoDispositivo).isON()) {
+                                        if (mainMethods.getArt().getCasas().get(codigoCasa).getDivisoes().get(divisao)
+                                                .get(codigoDispositivo).isON()) {
                                             try {
                                                 mainMethods.addPedido(pedido -> {
                                                     mainMethods.getDeviceWithCode(mainMethods.getCodeDispositivo())
@@ -454,7 +540,8 @@ public class Main {
                                                 "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
                                         opcaoDispositivos = 0;
                                     }
-                                } while (!mainMethods.existeDispositivo(codigoDispositivo));
+                                } while (!mainMethods.getArt().getCasas().get(codigoCasa).getDivisoes().get(divisao)
+                                        .containsKey(codigoDispositivo));
                                 if (mainMethods.getDeviceWithCode(codigoDispositivo).isCamera()) {
                                     int opcaoCamera = 0;
                                     do {
@@ -463,6 +550,12 @@ public class Main {
                                                 "2 - Alterar as resoluções\n" +
                                                 "3 - Alterar o tamanho do ficheiro\n" +
                                                 "4 - Alterar o consumo diário\n");
+                                        String estado = new String();
+                                        if (mainMethods.getDeviceWithCode(codigoDispositivo).isON()) {
+                                            estado = "ligado";
+                                        } else
+                                            estado = "desligado";
+                                        System.out.println("O dispositivo está " + estado + ".\n");
                                         try {
                                             opcaoCamera = sc.nextInt();
                                         } catch (Exception e) {
@@ -655,7 +748,8 @@ public class Main {
                                                 "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
                                         opcaoDispositivos = 0;
                                     }
-                                } while (!mainMethods.existeDispositivo(codigoDispositivo));
+                                } while (!mainMethods.getArt().getCasas().get(codigoCasa).getDivisoes().get(divisao)
+                                        .containsKey(codigoDispositivo));
                                 if (mainMethods.getDeviceWithCode(codigoDispositivo).isSpeaker()) {
                                     int opcaoSpeaker = 0;
                                     do {
@@ -664,6 +758,12 @@ public class Main {
                                                 "2 - Alterar a rádio que está a tocar\n" +
                                                 "3 - Alterar o volume atual\n" +
                                                 "4 - Alterar o consumo diário\n");
+                                        String estado = new String();
+                                        if (mainMethods.getDeviceWithCode(codigoDispositivo).isON()) {
+                                            estado = "ligado";
+                                        } else
+                                            estado = "desligado";
+                                        System.out.println("O dispositivo está " + estado + ".\n");
                                         try {
                                             opcaoSpeaker = sc.nextInt();
                                         } catch (Exception e) {
@@ -749,16 +849,22 @@ public class Main {
                                 + "Os fornecedores criados até ao momento são:\n"
                                 + mainMethods.getArt().getFornecedores());
                         int codigoFornecedorToChangeCasa = sc.nextInt();
-                        if (mainMethods.existeFornecedoremArticulador(codigoFornecedorToChangeCasa)) {
+                        if (mainMethods.existeFornecedor(codigoFornecedorToChangeCasa)) {
                             try {
                                 mainMethods.addPedido(pedido -> {
                                     CasaInteligente ciTemp = mainMethods.getArt().getCasas()
                                             .get(codigoCasaToChangeFornecedor);
-                                    int codigoAntigoFornecedor = mainMethods.getFornecedorCodeFromCasa(ciTemp);
-                                    mainMethods.getArt().getFornecedores().get(codigoAntigoFornecedor).getClientes()
-                                            .remove(codigoCasaToChangeFornecedor);
+                                    int codigoAntigoFornecedor = ciTemp.getCodeFornecedor();
+                                    // mainMethods.getArt().getFornecedores().get(codigoAntigoFornecedor).getClientes()
+                                    // .remove(codigoCasaToChangeFornecedor);
+                                    mainMethods.getArt().getFornecedores().get(codigoAntigoFornecedor)
+                                            .getCodigoClientes().remove(codigoCasaToChangeFornecedor);
+                                    // mainMethods.getArt().getFornecedores().get(codigoFornecedorToChangeCasa)
+                                    // .addCliente(ciTemp);
                                     mainMethods.getArt().getFornecedores().get(codigoFornecedorToChangeCasa)
-                                            .addCliente(ciTemp);
+                                            .getCodigoClientes().add(codigoCasaToChangeFornecedor);
+                                    mainMethods.getArt().getCasas().get(codigoCasaToChangeFornecedor)
+                                            .setCodeFornecedor(codigoFornecedorToChangeCasa);
                                 });
                             } catch (Exception e) {
                                 System.out.println(e.getMessage());
@@ -782,29 +888,19 @@ public class Main {
                         }
                     } while (dateToAdvance.isBefore(LocalDate.now()));
                     int dateDifference = (int) ChronoUnit.DAYS.between(LocalDate.now(), dateToAdvance);
-                    int opcaoTime = 0;
-                    do {
-                        System.out.println("\nOs dispositivos das casas estiveram ligadas durante este período?\n"
-                                + "1 - Sim\n" + "2 - Não\n");
-                        try {
-                            opcaoTime = sc.nextInt();
-                        } catch (Exception e) {
-                            System.out.println("\nInsira uma opção válida\n");
-                            opcaoTime = 0;
-                        }
-                    } while (opcaoTime < 1 || opcaoTime > 2);
-                    if (opcaoTime == 1) { // ver se a data introduzia é valida tipo perna
-                        Map<Integer, Double> consumoDeCasa = new HashMap<Integer, Double>();
-                        mainMethods.getArt().getCasas().values()
-                                .forEach(x -> consumoDeCasa.put(x.getCode(), x.energiaTotalDiariaCasa()));
-                        consumoDeCasa.values().forEach(x -> x *= dateDifference);
-                        System.out.println("O consumo de energia por casa é:\n" + consumoDeCasa);
-                        for (Fornecedor forneceperna : mainMethods.getArt().getFornecedores().values()) {
-                            for (CasaInteligente casebre : forneceperna.getClientes().values()) {
-                                mainMethods.placeFatura(dateToAdvance, forneceperna, casebre.getNifProprietario(),
-                                        casebre.energiaTotalDiariaCasa(),
-                                        forneceperna.precoTotalDiarioCliente(casebre.getCode()), casebre.getCode());
-                            }
+                    Map<Integer, Double> consumoDeCasa = new HashMap<Integer, Double>();
+                    mainMethods.getArt().getCasas().values()
+                            .forEach(x -> consumoDeCasa.put(x.getCode(), x.energiaTotalDiariaCasa()));
+                    consumoDeCasa.values().forEach(x -> x *= dateDifference);
+                    System.out.println("O consumo de energia por casa é:\n" + consumoDeCasa);
+                    for (Fornecedor fornece : mainMethods.getArt().getFornecedores().values()) {
+                        for (int codigoCasanoFornecedor : fornece.getCodigoClientes()) {
+                            CasaInteligente casadofornecedor = mainMethods.getArt().getCasas()
+                                    .get(codigoCasanoFornecedor);
+                            mainMethods.placeFatura(dateToAdvance, casadofornecedor.getNifProprietario(),
+                                    casadofornecedor.energiaTotalDiariaCasa(),
+                                    fornece.precoTotalDiarioCliente(casadofornecedor), casadofornecedor.getCode(),
+                                    fornece.getCode());
                         }
                     }
                     try {
@@ -884,47 +980,55 @@ public class Main {
                                         + "Os fornecedores disponíveis até ao momento são "
                                         + mainMethods.getArt().getFornecedores());
                         codigoFornecedorStat = sc.nextInt();
-                        boolean existeFornecedor = mainMethods.existeFornecedoremArticulador(codigoFornecedorStat);
+                        boolean existeFornecedor = mainMethods.existeFornecedor(codigoFornecedorStat);
                         while (!existeFornecedor) {
                             System.out.println(
                                     "Fornecedor não existe!\n");
                             System.out.println(
                                     "Forneça um código válido de fornecedor que pretende consultar:\n");
                             codigoFornecedorStat = sc.nextInt();
-                            existeFornecedor = mainMethods.existeFornecedoremArticulador(codigoFornecedorStat);
+                            existeFornecedor = mainMethods.existeFornecedor(codigoFornecedorStat);
                         }
+                        System.out.println(mainMethods.faturasByFornecedor(1));
                         System.out.println(
                                 "As facturas emitidas pelo fornecedor " + codigoFornecedorStat
                                         + " são:\n"
                                         + mainMethods.faturasByFornecedor(codigoFornecedorStat)
                                         + "\n");
-                        System.out.println("Deseja consultar alguma fatura em detalhe?\n" +
-                                "1 - Sim\n" +
-                                "2 - Não\n");
-                        int opcaoDetalheFatura = 0;
-                        do {
-                            try {
-                                opcaoDetalheFatura = sc.nextInt();
-                            } catch (Exception e) {
-                                System.out.println(
-                                        "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
-                            }
-                        } while (opcaoDetalheFatura < 1 || opcaoDetalheFatura > 2);
-                        if (opcaoDetalheFatura == 1) {
-                            System.out.println("Qual o código da casa que pretende consultar?\n");
-                            int codigoCasaForFatura = sc.nextInt();
-                            if (!mainMethods.existeCasa(codigoCasaForFatura)) {
-                                System.out.println("Casa não existe!\n");
-                            } else {
-                                System.out.println(
-                                        "Qual o código da fatura que pretende consultar? Os códigos de faturas estão ordenados da fatura mais antiga à mais recente. As faturas disponíveis até ao momento são: \n"
-                                                + mainMethods.printsFaturasCodes(codigoCasaForFatura));
-                                int codigoFaturaForDetalhe = sc.nextInt();
-                                if (!mainMethods.getArt().getCasas().get(codigoCasaForFatura).getCodigosDeFaturas()
-                                        .contains(codigoFaturaForDetalhe)) {
-                                    System.out.println("Fatura não existe!\n");
-                                } else
-                                    mainMethods.printsFatura(codigoCasaForFatura);
+                        if (mainMethods.faturasByFornecedor(codigoFornecedorStat).isEmpty())
+                            System.out.println(
+                                    "Ainda não foram geradas faturas. Por favor, gere as faturas antes de consultar.\n");
+                        else {
+                            System.out.println("Deseja consultar alguma fatura em detalhe?\n" +
+                                    "1 - Sim\n" +
+                                    "2 - Não\n");
+                            int opcaoDetalheFatura = 0;
+                            do {
+                                try {
+                                    opcaoDetalheFatura = sc.nextInt();
+                                } catch (Exception e) {
+                                    System.out.println(
+                                            "Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
+                                }
+                            } while (opcaoDetalheFatura < 1 || opcaoDetalheFatura > 2);
+                            if (opcaoDetalheFatura == 1) {
+                                System.out.println("Qual o código da casa que pretende consultar?\n"
+                                        + "As casas ligadas a este fornecedor são: \n" + mainMethods.getArt()
+                                                .getFornecedores().get(codigoFornecedorStat).getCodigoClientes());
+                                int codigoCasaForFatura = sc.nextInt();
+                                if (!mainMethods.existeCasa(codigoCasaForFatura)) {
+                                    System.out.println("Casa não existe!\n");
+                                } else {
+                                    System.out.println(
+                                            "Qual o código da fatura que pretende consultar? Os códigos de faturas estão ordenados da fatura mais antiga à mais recente. As faturas disponíveis até ao momento são: \n"
+                                                    + mainMethods.printsFaturasCodes(codigoCasaForFatura));
+                                    int codigoFaturaForDetalhe = sc.nextInt();
+                                    if (!mainMethods.getArt().getCasas().get(codigoCasaForFatura).getCodigosDeFaturas()
+                                            .contains(codigoFaturaForDetalhe)) {
+                                        System.out.println("Fatura não existe!\n");
+                                    } else
+                                        mainMethods.printsFatura(codigoCasaForFatura);
+                                }
                             }
                         }
                     } else if (opcaoForStat == 4) {
@@ -934,26 +1038,27 @@ public class Main {
                         System.out.println("Insira a data de fim do período de consulta (AAAA-MM-DD):\n");
                         String dataFimString = sc.next();
                         LocalDate dataFim = LocalDate.parse(dataFimString);
-                        System.out.println("O rank de maior consumo de energia é:\n" + mainMethods.rankCasasComMaiorConsumo(dataInicio, dataFim));
+                        System.out.println("O rank de maior consumo de energia é:\n"
+                                + mainMethods.rankCasasComMaiorConsumo(dataInicio, dataFim));
                     }
                     break;
-                    case 10:
-                        System.out.println("Introduza o nome do ficheiro de armazenamento: \n");
-                        String nomeFicheiro = sc.next();
-                        try {
-                            FileOutputStream fos = new FileOutputStream(nomeFicheiro);
-                            ObjectOutputStream oos = new ObjectOutputStream(fos);
-                            oos.writeObject(mainMethods);
-                            oos.writeObject(mainMethods.getArt());
-                            oos.writeObject(mainMethods.getArt().getCasas());
-                            oos.writeObject(mainMethods.getArt().getFaturas());
-                            oos.writeObject(mainMethods.getArt().getFornecedores());
-                            oos.close();
-                        } catch (IOException e) {
-                            System.out.println(e.getMessage());
-                        }
-                        break;
-                    case 11:
+                case 10:
+                    System.out.println("Introduza o nome do ficheiro de armazenamento: \n");
+                    String nomeFicheiro = sc.next();
+                    try {
+                        FileOutputStream fos = new FileOutputStream(nomeFicheiro);
+                        ObjectOutputStream oos = new ObjectOutputStream(fos);
+                        oos.writeObject(mainMethods);
+                        oos.writeObject(mainMethods.getArt());
+                        oos.writeObject(mainMethods.getArt().getCasas());
+                        oos.writeObject(mainMethods.getArt().getFaturas());
+                        oos.writeObject(mainMethods.getArt().getFornecedores());
+                        oos.close();
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case 11:
                     try {
                         System.out.println("Insira o nome do ficheiro que pretende carregar: \n");
                         String nomeFicheiro2 = sc.next();
@@ -967,7 +1072,7 @@ public class Main {
                         System.out.println(e.getMessage());
                     }
                     break;
-                    default:
+                default:
                     System.out.println("Opção inválida. Por favor, selecione uma das opções disponíveis.\n");
                     break;
             }

@@ -1,8 +1,10 @@
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,27 +14,40 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+/*
+ * Síntese de funcionalidades da classe :
+ *  Estruturação dos métodos usados na linha da frente do programa na classe Main,
+ *  Melhor leitura e perceção das atividades realizadas pelos métodos na class Main.
+*/
+
 public class MainMethods implements Serializable {
+
+    /*
+     * Variáveis de instância relativas à classe MainMethods.
+     */
 
     private CasaInteligente ci;
     private Fornecedor fornecedor;
     private Articulador art;
     private Map<Integer, SmartDevices> devices;
-    private ArrayDeque<Consumer<MainMethods>> pedidos;
+    private ArrayDeque<SerializableConsumer> pedidos;
     private int codeDispositivo;
 
-    // Creating a new instance of the class CasaInteligente, Fornecedor and
-    // Articulador.
+    /*
+     * Construtor sem parâmetros.
+     */
     public MainMethods() {
         this.ci = new CasaInteligente();
         this.fornecedor = new Fornecedor();
         this.art = new Articulador();
         this.devices = new HashMap<Integer, SmartDevices>();
-        this.pedidos = new ArrayDeque<Consumer<MainMethods>>();
+        this.pedidos = new ArrayDeque<SerializableConsumer>();
         this.codeDispositivo = 0;
     }
 
-
+    /*
+     * Construtor com parâmetro do tipo da classe.
+     */
     public MainMethods setMainMethods(MainMethods mainMethods) {
         this.ci = mainMethods.getCi();
         this.fornecedor = mainMethods.getFornecedor();
@@ -40,21 +55,29 @@ public class MainMethods implements Serializable {
         return this;
     }
 
-    // Métodos direcionados para manipulação de casas
-
-    // Função que retorna a Casa Inteligente
+    /**
+     * Getter de Casa Inteligente.
+     * 
+     * @return O objecto CasaInteligente.
+     */
     public CasaInteligente getCi() {
         return ci;
     }
 
     /**
-     * This function returns the fornecedor
+     * Getter de Fornecedor.
      * 
-     * @return The fornecedor object.
+     * @return O objecto Fornecedor.
      */
     public Fornecedor getFornecedor() {
         return fornecedor;
     }
+
+    /**
+     * Getter de Dispositivos.
+     * 
+     * @return Map de Dispositivos.
+     */
 
     public Map<Integer, SmartDevices> getDevices() {
         this.devices = new HashMap<Integer, SmartDevices>();
@@ -62,83 +85,98 @@ public class MainMethods implements Serializable {
     }
 
     /**
-     * This function returns the articulator of the current object
+     * Getter do Articulador (classe de relação).
      * 
-     * @return The Articulador object.
+     * @return O Objecto Articulador.
      */
     public Articulador getArt() {
         return art;
     }
 
+    /**
+     * Getter de Pedidos (Fila de espera).
+     * 
+     * @return ArrayDeque de pedidos.
+     */
     public ArrayDeque<Consumer<MainMethods>> getPedidos() {
         return this.pedidos.stream().collect(Collectors.toCollection(ArrayDeque::new));
     }
 
+    /**
+     * Getter do código de um dispostivo.
+     * 
+     * @return Inteiro relativo ao código de dispositivo.
+     */
     public int getCodeDispositivo() {
         return codeDispositivo;
     }
 
     /**
-     * The function `setCi` sets the value of the variable `ci` to the value of the
-     * parameter `ci`
+     * Setter para CasaInteligente.
      * 
-     * @param ci The CasaInteligente object that will be used to control the house.
+     * @param ci Objecto CasaInteligente.
      */
     public void setCi(CasaInteligente ci) {
         this.ci = ci;
     }
 
     /**
+     * Setter para Fornecedor
      * 
-     * @param fornecedor The object that will be used to populate the form.
+     * @param fornecedor Objecto Fornecedor.
      */
     public void setFornecedor(Fornecedor fornecedor) {
         this.fornecedor = fornecedor;
     }
 
     /**
-     * This function sets the articulator of the current object to the articulator
-     * passed as a parameter
+     * Setter para o Articulador (classe de relação).
      * 
-     * @param art    The articulator object that will be used to generate the
-     *               speech.
-     *               /**
-     *               It creates a new house and adds it to the list of houses
-     * 
-     * @param nome   name of the house
-     * @param nif    The NIF of the house owner.
-     * @param morada address
+     * @param art Objecto Articulador.
      */
     public void setArt(Articulador art) {
         this.art = art;
     }
 
-    public void setPedidos(ArrayDeque<Consumer<MainMethods>> pedidos) {
-        this.pedidos = new ArrayDeque<Consumer<MainMethods>>();
+    /**
+     * Setter de pedidos - define uma lista de pedidos que serão executados quando o
+     * utilizador decidir avançar no tempo.
+     * 
+     * @param pedidos Queue de pedidos.
+     */
+
+    public void setPedidos(ArrayDeque<SerializableConsumer> pedidos) {
+        this.pedidos = new ArrayDeque<SerializableConsumer>();
         this.pedidos.addAll(pedidos);
     }
 
+    /**
+     * Setter de Código de Dispositivo.
+     * 
+     * @param codeDispositivo Novo código para o dispositivo em causa.
+     */
     public void setCodeDispositivo(int codeDispositivo) {
         this.codeDispositivo = codeDispositivo;
     }
 
     /**
-     * It creates a new house and adds it to the list of houses
+     * Gera uma nova casa com os parâmetros fornecidos pelo utilizador e adiciona ao
+     * Map de Casas Inteligentes presente no articulador.
      * 
-     * @param nome   name of the house
-     * @param nif    The NIF of the house owner.
-     * @param morada address
+     * @param nome   Nome do Proprietário.
+     * @param nif    NIF do Proprietário.
+     * @param morada Morada do Proprietário.
      */
-    public void criaCasa(String nome, int nif, String morada) {
-        this.setCi(new CasaInteligente(nome, nif, morada));
+    public void criaCasa(String nome, int nif, String morada, int codeFornecedor) {
+        this.setCi(new CasaInteligente(nome, nif, morada, codeFornecedor));
         this.art.addCasa(this.ci);
-
     }
 
     /**
-     * This function checks if a house exists in the database
+     * Evoca o método presente no Articulador de verificação de existência de uma
+     * Casa Inteligente no Map presente no Articulador
      * 
-     * @param code The code of the house.
+     * @param code código da casa.
      * @return A boolean value.
      */
     public boolean existeCasa(int code) {
@@ -146,52 +184,61 @@ public class MainMethods implements Serializable {
     }
 
     /**
-     * This function creates a new supplier and adds it to the list of suppliers of
-     * the current
-     * article.
+     * Gera um novo fornecedor com o parâmetro fornecido e adiciona o ao Map de
+     * Fornecedores presente no Articulador.
      * 
-     * @param nome name of the supplier
+     * @param nome Nome da Empresa fornecedora de energia.
      */
-    public void criaFornecedor(String nome) {
-        this.setFornecedor(new Fornecedor(nome));
-        this.art.addFornecedor(this.fornecedor);
+    public void criaFornecedor(String nomeFornecedor) {
+        Fornecedor temp = new Fornecedor();
+        temp.setNomeFornecedor(nomeFornecedor);
+        this.art.addFornecedor(temp);
     }
 
     /**
-     * This function checks if a supplier exists in the articulator
+     * Evoca o método de verificação da existência de um dado fornecedor no Map de
+     * Fornecedores presente no Articulador.
      * 
-     * @param code the code of the supplier
+     * @param code código do Fornecedor.
      * @return A boolean value.
      */
-    public boolean existeFornecedoremArticulador(int code) {
+    public boolean existeFornecedor(int code) {
         return this.art.existeFornecedor(code);
     }
 
     /**
-     * Add a client to a supplier.
+     * Adiciona uma Casa Inteligente ao Map de Clientes de um dado Fornecedor.
+     * 
+     * @param codeFornecedor código do Fornecedor.
+     * @return código da casa adicionada.
      */
-    public void addCasaToFornecedor() {
-        this.fornecedor.addCliente(this.ci);
+    public int addCasaToFornecedor(int codeFornecedor) {
+        this.art.getFornecedores().get(codeFornecedor).addCliente(this.ci);
+        return this.ci.getCode();
     }
 
+    /**
+     * Remove uma Casa Inteligente do Map de Cliente de um dado Fornecedor.
+     */
     public void removeCasaFromFornecedor() {
         this.fornecedor.removeCliente(this.ci);
     }
 
     /**
-     * Returns the code of the supplier.
+     * Getter do código do fornecedor evocado
      * 
-     * @return The code of the supplier.
+     * @return código do fornecedor.
      */
     public int getCodeFornecedor() {
         return this.fornecedor.getCode();
     }
 
     /**
-     * This function returns the house with the given code.
+     * Getter de uma Casa Inteligente partindo de um código único (método de
+     * simplificação).
      * 
-     * @param code The code of the house you want to get.
-     * @return The house with the code that was passed as a parameter.
+     * @param code código único de uma dada Casa Inteligente
+     * @return A casa respetiva ao código fornecido.
      */
     public CasaInteligente getCiWithCode(int code) throws CasaInexistenteException {
         CasaInteligente casa = this.art.getCasas().get(code);
@@ -201,24 +248,18 @@ public class MainMethods implements Serializable {
     }
 
     /**
-     * It removes a house from the list of houses
+     * Remove Casa Inteligente do Map de Casas presente no Articulador.
      * 
-     * @param code The code of the house to be removed.
+     * @param code código único da casa a remover.
      */
     public void removeCasaFromArt(int code) {
         this.art.removeCasa(code);
     }
 
-    public int getFornecedorCodeFromCasa(CasaInteligente ci) {
-        return this.art.getFornecedores().values().stream().filter(f -> f.getClientes().containsKey(ci.getCode()))
-                .collect(Collectors.toList()).get(0).getCode();
-    }
-    // Métodos direcionados para Divisoes e Devices
-
     /**
-     * It returns a map of maps of smart devices
+     * Getter das divisões presentes.
      * 
-     * @return A map of maps of SmartDevices.
+     * @return Map de Divisões em que cada divisão possui um Map de SmartDevices.
      */
     public Map<String, Map<Integer, SmartDevices>> getDivisoes() throws DivisoesException {
         Map<String, Map<Integer, SmartDevices>> divisoes = ci.getDivisoes();
@@ -228,22 +269,20 @@ public class MainMethods implements Serializable {
     }
 
     /**
-     * > This function sets the devices map to the devices map passed in as a
-     * parameter
+     * Setter do Map de Devices.
      * 
-     * @param devices A map of all the devices in the house. The key is the device
-     *                ID and the value is
-     *                the device itself.
+     * @param devices Map de Integer(id do device) - SmartDevices
      */
     public void setDevices(Map<Integer, SmartDevices> devices) {
-        this.devices = devices;
+        this.devices = new HashMap<>();
+        devices.entrySet().forEach(device -> this.devices.put(device.getKey(), device.getValue().clone()));
     }
 
     /**
-     * It returns a map of integers to SmartDevices, given a string
+     * Getter de um Map respetivo a uma determinada divisão.
      * 
-     * @param divisao The name of the division you want to get the devices from.
-     * @return A map of integers and SmartDevices.
+     * @param divisao Nome da divisão.
+     * @return Map de Inteiros e SmartDevices respetivos a uma divisão.
      */
     public Map<Integer, SmartDevices> getDivisao(String divisao) throws DivisoesException {
         Map<Integer, SmartDevices> divisoes = ci.getDivisoes().get(divisao);
@@ -253,10 +292,10 @@ public class MainMethods implements Serializable {
     }
 
     /**
-     * Get the device with the given code from the given house.
+     * Getter de um SmartDevice específico
      * 
-     * @param code The code of the device you want to get.
-     * @return The device with the code that was passed as a parameter.
+     * @param code código do dispositivo.
+     * @return dispositivo corresponde ao código único presente no Map de Divisões.
      */
     public SmartDevices getDeviceWithCode(int code) {
         SmartDevices devices = this.ci.getDivisoes().entrySet().stream().flatMap(e -> e.getValue().entrySet().stream())
@@ -265,14 +304,10 @@ public class MainMethods implements Serializable {
     }
 
     /**
-     * "Get the SmartBulb with the given code from the list of SmartBulbs in the
-     * house."
+     * Getter de um SmartDevice tipo SmartBulb específico.
      * 
-     * The first line of the function is the return statement. It returns a
-     * SmartBulb
-     * 
-     * @param code The code of the bulb you want to get.
-     * @return SmartBulb
+     * @param code código do dispositivo.
+     * @return dispositivo corresponde ao código único presente no Map de Divisões.
      */
     public SmartBulb getBulbWithCode(int code) {
         SmartBulb lampada = (SmartBulb) this.ci.getDivisoes().entrySet().stream()
@@ -283,10 +318,10 @@ public class MainMethods implements Serializable {
     }
 
     /**
-     * Get the speaker with the given code from the list of speakers.
+     * Getter de um SmartDevice tipo SmartSpeaker específico.
      * 
-     * @param code The code of the speaker you want to get.
-     * @return A SmartSpeaker
+     * @param code código do dispositivo.
+     * @return dispositivo corresponde ao código único presente no Map de Divisões.
      */
     public SmartSpeaker getSpeakerWithCode(int code) {
         SmartSpeaker speaker = (SmartSpeaker) this.ci.getDivisoes().entrySet().stream()
@@ -296,13 +331,10 @@ public class MainMethods implements Serializable {
     }
 
     /**
-     * "Get the camera with the given code from the list of cameras."
+     * Getter de um SmartDevice tipo SmartCamera específico.
      * 
-     * The function is a bit more complicated than that, but it's still pretty
-     * simple
-     * 
-     * @param code The code of the camera you want to get.
-     * @return A SmartCamera
+     * @param code código do dispositivo.
+     * @return dispositivo corresponde ao código único presente no Map de Divisões.
      */
     public SmartCamera getCameraWithCode(int code) {
         SmartCamera camera = (SmartCamera) this.ci.getDivisoes().entrySet().stream()
@@ -312,33 +344,29 @@ public class MainMethods implements Serializable {
     }
 
     /**
-     * It sets the value of the attribute divisoes of the class CasaInteligente to
-     * the value of the
-     * parameter divisoes
+     * Evocação do Setter de Divisões presente na classe CasaInteligente (Setter de
+     * Divisões (Map)).
      * 
-     * @param divisoes A map of rooms, where each room is a map of devices, where
-     *                 each device is a
-     *                 SmartDevice object.
+     * @param divisoes Map de Nome de divisão com Map de Inteiros e SmartDevices.
      */
     public void setDivisoes(Map<String, Map<Integer, SmartDevices>> divisoes) {
         ci.setDivisoes(divisoes);
     }
 
     /**
-     * It creates a new division in the house
+     * Cria uma nova divisão a adiciona a ao Map de divisões
      * 
-     * @param nomeDivisao The name of the division you want to create.
-     * @param devices     Map<Integer, SmartDevices>
+     * @param nomeDivisao Nome da nova divisão.
+     * @param devices     SmartDevices presentes na nova divisão.
      */
-    public void criaDivisao(int codeCasa,String nomeDivisao, Map<Integer, SmartDevices> devices) {
-        // this.ci.addDivisao(nomeDivisao, devices);
+    public void criaDivisao(int codeCasa, String nomeDivisao, Map<Integer, SmartDevices> devices) {
         this.art.getCasas().get(codeCasa).addDivisao(nomeDivisao, devices);
     }
 
     /**
-     * This function checks if a division exists in a house
+     * Verifica se existe uma dada divisão numa casa.
      * 
-     * @param nomeDivisao The name of the division to be checked.
+     * @param nomeDivisao nome da divisão.
      * @return boolean
      */
     public boolean existeDivisaoInCasa(String nomeDivisao) {
@@ -346,91 +374,96 @@ public class MainMethods implements Serializable {
     }
 
     /**
-     * It creates a new SmartBulb object and adds it to the devices HashMap and to
-     * the division HashMap
+     * Criação de um SmartDevice tipo SmartBulb e posterior adição ao Map de
+     * dispositivos de uma dada divisão.
      * 
-     * @param isON              boolean
-     * @param tonalidade        "white" or "color"
-     * @param dimensoes         the dimensions of the device
-     * @param consumoDiarioBulb the daily consumption of the bulb
-     * @param divisao           The name of the room where the device will be
-     *                          placed.
+     * @param isON              "ligado?"
+     * @param custoInstalacao   Custo de instalação do dispositivo.
+     * @param tonalidade        Tonalidade(Cold,Neutral,Warm).
+     * @param dimensoes         Dimensões do dispositivo.
+     * @param consumoDiarioBulb Consumo diário do dispositivo
+     * @param codecasa          Codigo da casa para que se destina.
+     * @param divisao           Nome da divisão a adicionar
+     * 
      */
-    public void criaBulb(boolean isON, String tonalidade, double dimensoes, float consumoDiarioBulb, String divisao) {
-        SmartDevices device = new SmartBulb(isON, tonalidade, dimensoes, consumoDiarioBulb);
-        this.devices.put(device.getId(), device);
-        this.ci.addDeviceToDivisao(divisao, device);
+    public void criaBulb(boolean isON, float custoInstalacao, String tonalidade, double dimensoes,
+            float consumoDiarioBulb, int codecasa, String divisao) {
+        SmartDevices device = new SmartBulb(isON, custoInstalacao, tonalidade, dimensoes, consumoDiarioBulb);
+        this.art.getCasas().get(codecasa).getDivisoes().get(divisao).put(device.getId(), device.clone());
+        ;
     }
 
     /**
-     * It creates a new SmartSpeaker object and adds it to the devices HashMap and
-     * to the division it
-     * belongs to
+     * Criação de um SmartDevice tipo SmartSpeaker e posterior adição ao Map de
+     * dispositivos de uma dada divisão.
      * 
-     * @param isON                 boolean
-     * @param volume               0-100
-     * @param nomeRadio            The name of the radio station.
-     * @param marcaEquipamento     Brand of the device
-     * @param consumoDiarioSpeaker the daily consumption of the speaker
-     * @param divisao              The name of the room where the device will be
-     *                             placed.
+     * @param isON                 "ligado?"
+     * @param custoInstalacao      Custo de instalação do dispositivo.
+     * @param volume               Volume do dispostivo.
+     * @param nomeRadio            Nome da rádio atual.
+     * @param marcaEquimento       Marca do equipamento.
+     * @param consumoDiarioSpeaker Consumo diário de energia.
+     * @param codecasa             Codigo da casa para que se destina.
+     * @param divisao              Nome da divisão a adicionar.
+     * 
      */
-    public void criaSpeaker(boolean isON, int volume, String nomeRadio, String marcaEquipamento,
-            float consumoDiarioSpeaker, String divisao) {
-        SmartDevices device = new SmartSpeaker(isON, volume, nomeRadio, marcaEquipamento, consumoDiarioSpeaker);
-        this.devices.put(device.getId(), device);
-        this.ci.addDeviceToDivisao(divisao, device);
+    public void criaSpeaker(boolean isON, float custoInstalacao, int volume, String nomeRadio, String marcaEquipamento,
+            float consumoDiarioSpeaker, int codecasa, String divisao) {
+        SmartDevices device = new SmartSpeaker(isON, custoInstalacao, volume, nomeRadio, marcaEquipamento,
+                consumoDiarioSpeaker);
+        this.art.getCasas().get(codecasa).getDivisoes().get(divisao).put(device.getId(), device.clone());
     }
 
     /**
-     * This function creates a new SmartCamera object and adds it to the devices
-     * HashMap and to the
-     * divisao HashMap.
+     * Criação de um SmartDevice tipo SmartCamera e posterior adição ao Map de
+     * dispositivos de uma dada divisão.
      * 
-     * @param isON                boolean, true if the device is on, false otherwise
-     * @param resolution_x        the width of the camera's resolution
-     * @param resolution_y        the height of the camera's resolution
-     * @param filesize            the size of the file in MB
-     * @param consumoDiarioCamera the daily consumption of the camera
-     * @param divisao             The name of the room where the device will be
-     *                            placed.
+     * @param isON                "ligado?".
+     * @param custoInstalacao     Custo de instalação do dispositivo.
+     * @param resolution_x        Parâmetro 1 da resolução.
+     * @param resolution_Y        Parâmetro 2 da resolução.
+     * @param filesize            Tamanho do ficheiro de gravação.
+     * @param consumoDiarioCamera Consumo diário de energia.
+     * @param codecasa            Codigo da casa para que se destina.
+     * @param divisao             Nome da divisão a adicionar.
+     * 
      */
-    public void criaCamera(boolean isON, int resolution_x, int resolution_y, double filesize, float consumoDiarioCamera,
-            String divisao) {
-        SmartDevices device = new SmartCamera(isON, resolution_x, resolution_y, filesize, consumoDiarioCamera);
-        this.devices.put(device.getId(), device);
-        this.ci.addDeviceToDivisao(divisao, device);
+    public void criaCamera(boolean isON, float custoInstalacao, int resolution_x, int resolution_y, double filesize,
+            float consumoDiarioCamera, int codecasa, String divisao) {
+        SmartDevices device = new SmartCamera(isON, custoInstalacao, resolution_x, resolution_y, filesize,
+                consumoDiarioCamera);
+        this.art.getCasas().get(codecasa).getDivisoes().get(divisao).put(device.getId(), device.clone());
     }
 
     /**
-     * This function returns true if the device with the given id exists in the
-     * system, and false
-     * otherwise.
+     * Evoca o método presente na classe CasaInteligente para remover um dado
+     * dispositivo de uma dada divisão
      * 
-     * @param id The id of the device.
-     * @return A boolean value.
-     */
-    public boolean existeDispositivo(int id) {
-        return this.devices.containsKey(id);
-    }
-
-    /**
-     * Removes a device from a division
-     * 
-     * @param divisao The name of the division you want to remove the device from.
-     * @param id      the id of the device you want to remove from the divisao
+     * @param divisao nome da divisão.
+     * @param id      código do dispositivo.
      */
     public void removeDeviceFromDivisao(String divisao, int id) {
         this.ci.removeDeviceFromDivisao(divisao, id);
     }
 
-    public void addPedido(Consumer<MainMethods> pedido) throws Exception {
+    /**
+     * Adiciona um pedido à Queue de pedidos local.
+     * 
+     * @param pedido Pedido a adicionar.
+     * @throws PedidoException
+     */
+    public void addPedido(SerializableConsumer pedido) throws PedidoException {
         this.pedidos.add(pedido);
     }
 
-    public void execPedidos() throws Exception {
+    /**
+     * Executa todos os pedidos presentes na Queue local.
+     * 
+     * @throws PedidoException
+     */
+    public void execPedidos() throws PedidoException {
         if (this.pedidos.isEmpty()) {
-            throw new Exception("Não há pedidos para executar");
+            throw new PedidoException("Não existem mais pedidos para executar");
         } else {
             for (Consumer<MainMethods> pedido : this.pedidos) {
                 pedido.accept(this);
@@ -439,66 +472,93 @@ public class MainMethods implements Serializable {
         }
     }
 
-    public void removePedido(Consumer<MainMethods> pedido) throws Exception {
+    /**
+     * Remove um pedido da Queue local.
+     * 
+     * @param pedido Pedido a remover.
+     */
+    public void removePedido(Consumer<MainMethods> pedido) throws PedidoException {
         if (!this.pedidos.contains(pedido)) {
             Exception e = new Exception("Pedido não existe");
-            throw new Exception(e.getMessage());
+            throw new PedidoException(e.getMessage());
         } else {
             this.pedidos.remove(pedido);
         }
     }
 
-    // STATS
+    /**
+     * Indica a casa com maior consumo de um dado fornecedor (auxiliar).
+     * 
+     * @param codigoFornecedor Código do fornecedor.
+     */
+    private CasaInteligente casaComMaiorConsumoDoFornecedor(int codigoFornecedor) {
+        double maiorConsumo = 0.00;
+        CasaInteligente casaComMaiorConsumo = new CasaInteligente();
+        for (int codigo : this.art.getFornecedores().get(codigoFornecedor).getCodigoClientes()) {
+            if (this.art.getCasas().get(codigo).energiaTotalDiariaCasa() > maiorConsumo) {
+                maiorConsumo = this.art.getCasas().get(codigo).energiaTotalDiariaCasa();
+                casaComMaiorConsumo = this.art.getCasas().get(codigo);
+            }
+        }
+        return casaComMaiorConsumo;
+    }
 
     /**
-     * It returns the code of the house with the highest energy consumption in the
-     * entire system
+     * Indica a casa com maior consumo de todas as casas num dado período de tempo
+     * (stat nº1).
      * 
-     * @return The code of the house with the highest consumption in the period.
+     * @return Casa com maior consumo num dado período de tempo.
      */
     public int casaComMaiorConsumoGeralemDatas() {
         int codeCasa = 0;
         double maxConsumo = 0.00;
         for (Fornecedor fornecedor : this.art.getFornecedores().values()) {
-            if (fornecedor.casaComMaiorConsumoDoFornecedor().energiaTotalDiariaCasa() > maxConsumo) {
-                maxConsumo = fornecedor.casaComMaiorConsumoDoFornecedor().energiaTotalDiariaCasa();
-                codeCasa = fornecedor.casaComMaiorConsumoDoFornecedor().getCode();
+            if (this.casaComMaiorConsumoDoFornecedor(fornecedor.getCode()).energiaTotalDiariaCasa() > maxConsumo) {
+                maxConsumo = this.casaComMaiorConsumoDoFornecedor(fornecedor.getCode()).energiaTotalDiariaCasa();
+                codeCasa = this.casaComMaiorConsumoDoFornecedor(fornecedor.getCode()).getCode();
             }
         }
         return codeCasa;
     }
 
-    // 2 ª stat
-    // return string = code of Fornecedor
     /**
-     * It iterates through all the suppliers in the system, and returns the supplier
-     * with the highest
-     * total sales
+     * Método que calcula a faturação total de um dado fornecedor num dado período
+     * (auxiliar).
      * 
-     * @return The code of the supplier with the highest billing.
+     * @return valor faturado.
+     */
+    private double faturacaoFornecedor() {
+        double valorTotal = 0.00;
+        for (CasaInteligente casa : this.art.getCasas().values()) {
+            valorTotal += (casa.energiaTotalDiariaCasa() * this.fornecedor.getValorBase() * this.fornecedor.getTax())
+                    * 0.9;
+        }
+        return valorTotal;
+    }
+
+    /**
+     * Indica o fornecedor existente com maior faturação (stat nº2).
+     * 
+     * @return código do fornecedor com maior faturação.
      */
     public int fornecedorComMaiorFaturacao() {
         double maxFatura = 0.00;
         int codeFornecedor = 0;
         for (Fornecedor fornecedor : this.art.getFornecedores().values()) {
-            if (fornecedor.faturacaoFornecedor() > maxFatura) {
-                maxFatura = fornecedor.faturacaoFornecedor();
+            if (this.faturacaoFornecedor() > maxFatura) {
+                maxFatura = this.faturacaoFornecedor();
                 codeFornecedor = fornecedor.getCode();
             }
         }
         return codeFornecedor;
     }
 
-    // 3ª stat
-    // list all faturas of a fornecedor
     /**
-     * It returns a set of integers that are the codes of the invoices of a supplier
-     * with a given code
+     * Apresenta uma lista com todas as faturas de um dado fornecedor.
      * 
-     * @param code the code of the supplier
-     * @return A set of integers.
+     * @param code código do fornecedor.
+     * @return Lista de faturas.
      */
-
     public ArrayList<Integer> faturasByFornecedor(int code) {
         return this.art.getFornecedores().values().stream().filter(fornecedor -> fornecedor.getCode() == code)
                 .findFirst()
@@ -506,10 +566,21 @@ public class MainMethods implements Serializable {
                 .getCodigosDeFaturas();
     }
 
+    /**
+     * Apresenta no terminal uma lista com os códigos das faturas de uma dada casa.
+     * 
+     * @param code código da casa.
+     * @return Lista de códigos das faturas.
+     */
     public ArrayList<Integer> printsFaturasCodes(int codeCasa) {
         return this.art.getCasas().get(codeCasa).getCodigosDeFaturas();
     }
 
+    /**
+     * Apresenta no terminal um layout visual com os dados de uma dada fatura.
+     * 
+     * @param code código da fatura.
+     */
     public void printsFatura(int codeFatura) {
         Fatura fatura = this.art.getFaturas().get(codeFatura);
         System.out.println("Código de Fornecedor: " + fatura.getFornecedor() + "\n" +
@@ -537,14 +608,13 @@ public class MainMethods implements Serializable {
     }
 
     /**
-     * It sorts the houses by their energy spent in a given time space and returns a
-     * list of
-     * their codes
+     * Valida a veracidade de duas datas (auxiliar).
      * 
-     * @return An ArrayList of Integers.
+     * @param dataInicio Data inicial.
+     * @param dataFim    Data final.
+     * @param f          Fatura em causa.
+     * @return Verdadeiro se as datas forem válidas.
      */
- 
-
     private static boolean validateFatura(LocalDate dateInicio, LocalDate dateFim, Fatura f) {
         if (f.getDateInicio().isAfter(dateInicio) && f.getDateFim().isBefore(dateFim)
                 || f.getDateInicio().isEqual(dateInicio) && f.getDateFim().isEqual(dateFim)
@@ -556,6 +626,34 @@ public class MainMethods implements Serializable {
         }
     }
 
+    /**
+     * Cria uma nova fatura tendo em conta o intervalo de tempo entre as duas datas.
+     * 
+     * @param nifCliente     NIF do cliente.
+     * @param dateinicio     data inicial.
+     * @param datefim        data final.
+     * @param consumo        consumo energia.
+     * @param custo          custo total.
+     * @param codigoCasa     código da casa.
+     * @param codeFornecedor código do fornecedor.
+     * @return Fatura com os respetivos dados.
+     */
+    public Fatura criaFatura(int nifCliente, LocalDate dateinicio, LocalDate datefim, double consumo, double custo,
+            int codigoCasa, int codeFornecedor) {
+        double consumoTotal = this.art.getCasas().values().stream().mapToDouble(c -> c.energiaTotalDiariaCasa()).sum();
+        int days = (int) ChronoUnit.DAYS.between(dateinicio, datefim);
+        // int codeFornecedor = this.art.getCasas().get(codigoCasa).getCodeFornecedor();
+        double custoTotal = this.art.getFornecedores().get(codeFornecedor)
+                .precoTotalDiarioCliente(this.art.getCasas().get(codigoCasa)) * days;
+        return new Fatura(dateinicio, datefim, codeFornecedor, nifCliente, consumoTotal, custoTotal, codigoCasa);
+    }
+
+    /**
+     * Método auxiliar para ordenar um Map
+     * 
+     * @param unsortmap Map a ser ordenado.
+     * @return Map ordenado.
+     */
     private static Map<Integer, Double> sortByValue(Map<Integer, Double> unsortMap) {
         List<Map.Entry<Integer, Double>> list = new LinkedList<Map.Entry<Integer, Double>>(unsortMap.entrySet());
 
@@ -574,6 +672,14 @@ public class MainMethods implements Serializable {
         return sortedMap;
     }
 
+    /**
+     * Apresenta o rank de casas com maior consumo de energia num dado período
+     * (4ºstat).
+     * 
+     * @param dateInicio Data inicial.
+     * @param dateFim    Data final.
+     * @return Lista de casas ordenadas por consumo.
+     */
     public ArrayList<Integer> rankCasasComMaiorConsumo(LocalDate dateInicio, LocalDate dateFim) {
         int codigoCasa = 0;
         double consumo = 0.00;
@@ -597,15 +703,23 @@ public class MainMethods implements Serializable {
         return casasID;
     }
 
-
-    // Avanço do tempo
-
-    public void placeFatura(LocalDate fim, Fornecedor forneceai, int nifCliente, double consumo, double custo,
-            int codigoCasa) {
-        Fatura fatura = forneceai.criaFatura(nifCliente, LocalDate.now(), fim, consumo, custo, codigoCasa);
+    /**
+     * Método que adiciona às respetivas estruturas de dados a fatura recentemente
+     * criada.
+     * 
+     * @param fim            data final da fatura.
+     * @param nifCliente     NIF do cliente.
+     * @param consumo        consumo energia do cliente.
+     * @param custo          custo total.
+     * @param codigoCasa     código da casa.
+     * @param codefornecedor código do fornecedor.
+     */
+    public void placeFatura(LocalDate fim, int nifCliente, double consumo, double custo,
+            int codigoCasa, int codefornecedor) {
+        Fatura fatura = criaFatura(nifCliente, LocalDate.now(), fim, consumo, custo, codigoCasa, codefornecedor);
         this.art.addFaturaToMap(fatura);
-        this.art.getFornecedores().get(forneceai.getCode()).addFaturaClienteAL(fatura);
+        this.art.getCasas().get(codigoCasa).addFatura(fatura.getCode());
+        this.art.getFornecedores().get(codefornecedor).addFatura(fatura.getCode());
     }
-
 
 }

@@ -6,160 +6,170 @@ import java.util.HashMap;
 
 public class CasaInteligente implements Serializable {
 
-    // The class attributes.
+    /**
+    * Os atributos da classe
+    */ 
     private static int counter = 0;
     private String nomeProprietario;
     private int nifProprietario;
     private String morada;
     private int code;
-    private ArrayList<Integer> codigosDeFaturas; // CODIGOS DE ACESSO FATURAS DA CASA QUE SERÃO USADAS NO MAP PRESENTE
-                                                 // NO
-    // ARTICULADOR (CONVEM GUARDAR COPIA NO FORNECEDOR)
+    private int codeFornecedor;
+    private ArrayList<Integer> codigosDeFaturas;
     private Map<String, Map<Integer, SmartDevices>> divisoes;
 
-    // A constructor.
+    // Constructor
     public CasaInteligente() {
         this.nomeProprietario = "";
         this.nifProprietario = 0;
         this.morada = "";
         this.code = 0;
+        this.codeFornecedor = 0;
         this.codigosDeFaturas = new ArrayList<Integer>();
         this.divisoes = new HashMap<>();
     }
 
-    // A constructor.
-    public CasaInteligente(String nomeProprietario, int nifProprietario, String morada) {
+    // Construtor
+    public CasaInteligente(String nomeProprietario, int nifProprietario, String morada, int codeFornecedor) {
         this.nomeProprietario = nomeProprietario;
         this.nifProprietario = nifProprietario;
         this.morada = morada;
         this.code = counter++;
+        this.codeFornecedor = codeFornecedor;
         this.codigosDeFaturas = new ArrayList<Integer>();
         this.divisoes = new HashMap<>();
     }
 
-    // A copy constructor.
+    // Construtor
     public CasaInteligente(CasaInteligente ci) {
         setMorada(ci.getMorada());
         setNomeProprietario(ci.getNomeProprietario());
         setNifProprietario(ci.getNifProprietario());
         setCode(ci.getCode());
+        setCodeFornecedor(ci.getCodeFornecedor());
         setDivisoes(ci.getDivisoes());
         setCodigoFaturas(ci.getCodigosDeFaturas());
     }
 
     /**
-     * This function returns the name of the owner of the Property
+     * getter do nome do proprietario
      * 
-     * @return The name of the owner of the Property.
+     * @return nome do proprietario
      */
     public String getNomeProprietario() {
         return this.nomeProprietario;
     }
 
     /**
-     * > This function returns the nifProprietario of the object
+     * getter do nif do proprietario
      * 
-     * @return The nifProprietario
+     * @return nifProprietario
      */
     public int getNifProprietario() {
         return this.nifProprietario;
     }
 
     /**
-     * This function returns the value of the variable morada.
+     * metodo que implementa o getter da morada
      * 
-     * @return The address of the client.
+     * @return morada
      */
     public String getMorada() {
         return this.morada;
     }
 
     /**
-     * This function returns an ArrayList of Integers that contains the codes of the
-     * invoices
+     * implementacao do getter dos codigos de faturas
      * 
-     * @return The method returns an ArrayList of Integers.
+     * @return codigos de fatura
      */
     public ArrayList<Integer> getCodigosDeFaturas() {
         return this.codigosDeFaturas.stream().collect(Collectors.toCollection(ArrayList::new)); // cuidado!
     }
 
     /**
-     * > This function returns the code of the current object
+     * getter do codigo
      * 
-     * @return The code of the enum.
+     * @return codigo
      */
     public int getCode() {
         return this.code;
     }
 
     /**
-     * It returns a map of the form <String, Map<Integer, SmartDevices>>, where the
-     * String is the name
-     * of the division and the Map<Integer, SmartDevices> is a map of the form
-     * <Integer, SmartDevices>,
-     * where the Integer is the id of the device and the SmartDevices is the device
-     * itself
+    *getter do codigo do fornecedor
+     */
+
+    public int getCodeFornecedor() {
+        return codeFornecedor;
+    }
+
+    /**
+     *getter das divisoes da casa
      * 
-     * @return A map with the key being the name of the division and the value being
-     *         a map with the key
-     *         being the floor number and the value being a SmartDevices object.
+     * @return map de divisoes
      */
     public Map<String, Map<Integer, SmartDevices>> getDivisoes() {
         return this.divisoes.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     /**
-     * This function sets the name of the owner of the Property
+     * Setter do nome do proprietario
      * 
-     * @param nomeProprietario The name of the owner of the Property.
+     * @param nomeProprietario nome do proprietario
      */
     public void setNomeProprietario(String nomeProprietario) {
         this.nomeProprietario = nomeProprietario;
     }
 
     /**
-     * This function sets the nifProprietario variable to the value of the
-     * nifProprietario parameter
+     * implementacao do setter do nif do proprietario
      * 
-     * @param nifProprietario The NIF of the owner of the Property.
+     * @param nifProprietario nif do dono
      */
     public void setNifProprietario(int nifProprietario) {
         this.nifProprietario = nifProprietario;
     }
 
     /**
-     * This function sets the morada of the object
+     * implememtacao do setter da morada
      * 
-     * @param morada The address of the client.
+     * @param morada morada
      */
     public void setMorada(String morada) {
         this.morada = morada;
     }
 
     /**
-     * This function sets the code variable to the value of the code parameter.
+     * implememtacao do setter do codigo
      * 
-     * @param code The HTTP status code.
+     * @param code codigo
      */
     public void setCode(int code) {
         this.code = code;
     }
 
     /**
-     * It creates a new ArrayList, iterates over the given ArrayList, and adds each
-     * element to the new ArrayList
+    *implememtacao do setter do codigo de fornecedor
+    *
+    *@param codeFornecedor codigo do fornecedor
+     */
+
+    public void setCodeFornecedor(int codeFornecedor) {
+        this.codeFornecedor = codeFornecedor;
+    }
+
+    /**
+     * implementacao do setter dos codigos de fatura
      * 
-     * @param codigosDeFaturas ArrayList of Integers
+     * @param codigosDeFaturas codigos de fatura
      */
     public void setCodigoFaturas(ArrayList<Integer> codigosDeFaturas) {
-        this.codigosDeFaturas = new ArrayList<Integer>();
         codigosDeFaturas.forEach(c -> this.codigosDeFaturas.add(c));
     }
 
     /**
-     * It takes a map of maps of SmartDevices and copies it to the class's map of
-     * maps of SmartDevices
+     * implementacao do setter das divisoes
      * 
      * @param divisoes Map<String, Map<Integer, SmartDevices>>
      */
@@ -169,12 +179,10 @@ public class CasaInteligente implements Serializable {
     }
 
     /**
-     * If the object is the same object, return true. If the object is null or of a
-     * different class,
-     * return false. If the object is of the same class, compare the fields
+     * implementacao do equals()
      * 
-     * @param o the object to be compared.
-     * @return The hashCode of the object.
+     * @param o objeto a ser comparado
+     * @return hashcode
      */
     @Override
     public boolean equals(Object o) {
@@ -184,14 +192,15 @@ public class CasaInteligente implements Serializable {
             return false;
         CasaInteligente that = (CasaInteligente) o;
         return nifProprietario == that.nifProprietario && nomeProprietario.equals(that.nomeProprietario)
-                && morada.equals(that.morada) && codigosDeFaturas.equals(that.codigosDeFaturas)
+                && morada.equals(that.morada) && codigosDeFaturas.equals(that.codigosDeFaturas) && code == that.code
+                && codeFornecedor == that.codeFornecedor
                 && divisoes.equals(that.divisoes);
     }
 
     /**
-     * The toString() method returns a string representation of the object
+     * implementacao do metodo toString
      * 
-     * @return The toString method is being returned.
+     * @return concatenacao
      */
     @Override
     public String toString() {
@@ -200,26 +209,25 @@ public class CasaInteligente implements Serializable {
                 ", nifProprietario=" + nifProprietario +
                 ", morada='" + morada + '\'' +
                 ", code=" + code +
+                ", codeFornecedor=" + codeFornecedor +
                 ", codigosDeFaturas=" + codigosDeFaturas +
                 '}';
     }
 
     /**
-     * The clone() method creates a new object that is a copy of the original
-     * object.
+     * implementacao do clone()
      * 
-     * @return A new CasaInteligente object with the same state as the original.
+     * @return nova casa inteligente mas com os atributos iguais a clonada
      */
     public CasaInteligente clone() {
         return new CasaInteligente(this);
     }
 
     /**
-     * It returns true if there's a light bulb with the given key in any of the
-     * rooms
+     * Verifica se existe uma lampada com esse id
      * 
-     * @param key The key of the bulb to be checked
-     * @return a boolean value.
+     * @param key id da lampada
+     * @return boolean
      */
     public boolean existeLuz(int key) {
         return this.divisoes.entrySet().stream()
@@ -227,10 +235,10 @@ public class CasaInteligente implements Serializable {
     }
 
     /**
-     * It returns true if there is a speaker with the given key in the map
+     * Verifica se existe um speaker com esse id
      * 
-     * @param key the key of the speaker
-     * @return A boolean value.
+     * @param key id do speaker
+     * @return boolean
      */
     public boolean existeSpeaker(int key) {
         return this.divisoes.entrySet().stream()
@@ -238,10 +246,10 @@ public class CasaInteligente implements Serializable {
     }
 
     /**
-     * It returns true if there is a camera with the given key in the map
+     * Verifica se existe uma camera com esse id
      * 
-     * @param key The key of the camera to be checked
-     * @return A boolean value.
+     * @param key o id da camera
+     * @return boolean
      */
     public boolean existeCamera(int key) {
         return this.divisoes.entrySet().stream()
@@ -249,152 +257,69 @@ public class CasaInteligente implements Serializable {
     }
 
     /**
-     * It returns true if the map contains a key that matches the parameter
+     * Verifica se existe uma divisao consoante um id
      * 
-     * @param key The key to be searched for.
-     * @return A boolean value.
+     * @param key o id
+     * @return boolean
      */
     public boolean existeDivisao(String key) {
         return this.divisoes.containsKey(key);
     }
 
     /**
-     * It adds a new division to the house
+     * Adiciona uma nova divisao a casa
      * 
-     * @param divisaokey The name of the division.
-     * @param devices    A map of devices, where the key is the device's ID and the
-     *                   value is the device
-     *                   itself.
+     * @param divisaokey Nome da divisao
+     * @param devices    map de dispositivos que estarao na divisao
      */
     public void addDivisao(String divisaokey, Map<Integer, SmartDevices> devices) {
         this.divisoes.put(divisaokey, devices);
     }
 
     /**
-     * It removes the division with the given key from the list of divisions
+     * remove determinada divisao
      * 
-     * @param key The key of the divisao to remove.
+     * @param key parametro identificativo da divisao
      */
     public void removeDivisao(String key) {
         this.divisoes.remove(key);
     }
 
-    // For each division, if it has a bulb, turn it on.
-    public void setAllLuzesON() {
-        this.divisoes.entrySet().stream().filter(
-                divisao -> divisao.getValue().entrySet().stream().anyMatch(device -> device.getValue().isBulb()))
-                .forEach(
-                        divisao -> divisao.getValue().entrySet().stream().forEach(device -> device.getValue().setON()));
-    }
-
-    // For each division, if it has a bulb, turn it off
-    public void setAllLuzesOFF() {
-        this.divisoes.entrySet().stream().filter(
-                divisao -> divisao.getValue().entrySet().stream().anyMatch(device -> device.getValue().isBulb()))
-                .forEach(divisao -> divisao.getValue().entrySet().stream()
-                        .forEach(device -> device.getValue().setOFF()));
-    }
-
-    // For each division, if it has a speaker, turn it on.
-    public void setAllSpeakersON() {
-        this.divisoes.entrySet().stream().filter(
-                divisao -> divisao.getValue().entrySet().stream().anyMatch(device -> device.getValue().isSpeaker()))
-                .forEach(
-                        divisao -> divisao.getValue().entrySet().stream().forEach(device -> device.getValue().setON()));
-    }
-
-    // For each division, if it has a speaker, turn it off
-    public void setAllSpeakersOFF() {
-        this.divisoes.entrySet().stream().filter(
-                divisao -> divisao.getValue().entrySet().stream().anyMatch(device -> device.getValue().isSpeaker()))
-                .forEach(divisao -> divisao.getValue().entrySet().stream()
-                        .forEach(device -> device.getValue().setOFF()));
-    }
-
-    // It sets all cameras to ON
-    public void setAllCamerasON() {
-        this.divisoes.entrySet().stream().filter(
-                divisao -> divisao.getValue().entrySet().stream().anyMatch(device -> device.getValue().isCamera()))
-                .forEach(
-                        divisao -> divisao.getValue().entrySet().stream().forEach(device -> device.getValue().setON()));
-    }
-
-    // It sets all cameras off
-    public void setAllCamerasOFF() {
-        this.divisoes.entrySet().stream().filter(
-                divisao -> divisao.getValue().entrySet().stream().anyMatch(device -> device.getValue().isCamera()))
-                .forEach(divisao -> divisao.getValue().entrySet().stream()
-                        .forEach(device -> device.getValue().setOFF()));
-    }
-
-    // For each division, for each device, set the device to ON
-    public void setAllDevicesON() {
-        this.divisoes.entrySet()
-                .forEach(divisao -> divisao.getValue().entrySet().forEach(device -> device.getValue().setON()));
-    }
-
-    // For each division, for each device, set the device to OFF
-    public void setAllDevicesOFF() {
-        this.divisoes.entrySet()
-                .forEach(divisao -> divisao.getValue().entrySet().forEach(device -> device.getValue().setOFF()));
-    }
-
     /**
-     * It checks if a device exists in a division
+     * Verifica se um determinado dispositivo existe numa divisao
      * 
-     * @param divisaokey The key of the division
-     * @param id         the id of the device
-     * @return A boolean value.
+     * @param divisaokey nome da divisao
+     * @param id         id do device
+     * @return boolean
      */
     public boolean existeDeviceInDivisao(String divisaokey, int id) {
         return this.divisoes.get(divisaokey).containsKey(id);
     }
 
     /**
-     * It adds a device to a division
+     * Adiciona um dispositivo a uma divisao
      * 
-     * @param nomeDivisao The name of the division you want to add the device to.
-     * @param device      The device to be added to the division.
+     * @param nomeDivisao o nome da divisao a qual vamos adicionar o dispositivo.
+     * @param device      o dispositivo a ser adicionado.
      */
     public void addDeviceToDivisao(String nomeDivisao, SmartDevices device) {
         this.divisoes.get(nomeDivisao).put(device.getId(), device.clone());
     }
 
     /**
-     * It removes a device from a division
+     * Remover um dispositivo de uma divisão
      * 
-     * @param divisaokey The key of the division you want to remove the device from.
-     * @param id         the id of the device
+     * @param divisaokey identificador da divisao
+     * @param id         id do device
      */
     public void removeDeviceFromDivisao(String divisaokey, int id) {
         this.divisoes.get(divisaokey).remove(id);
     }
 
     /**
-     * For each division, if it contains the device with the given id, turn it on.
+     * Soma total dos consumos diarios da casa(indo por divisoes e dispositivos)
      * 
-     * @param id the id of the device you want to turn on
-     */
-    public void turnOnSpecificDevice(int id) {
-        this.divisoes.entrySet().stream().filter(divisao -> divisao.getValue().containsKey(id))
-                .forEach(divisao -> divisao.getValue().get(id).setON());
-    }
-
-    /**
-     * For each division, if the division contains the device with the given id,
-     * turn off the device.
-     * 
-     * @param id The id of the device you want to turn off.
-     */
-    public void turnOffSpecificDevice(int id) {
-        this.divisoes.entrySet().stream().filter(divisao -> divisao.getValue().containsKey(id))
-                .forEach(divisao -> divisao.getValue().get(id).setOFF());
-    }
-
-    /**
-     * It sums the daily consumption of all devices in all divisions of the house
-     * 
-     * @return The sum of the daily energy consumption of all devices in the house.
+     * @return Soma da energia diaria consumida
      */
     public double energiaTotalDiariaCasa() {
         return this.divisoes.values().stream()
@@ -403,10 +328,9 @@ public class CasaInteligente implements Serializable {
     }
 
     /**
-     * Adds a new invoice code to the list of invoice codes.
+     * Adiciona uma nova fatura com um determinado codigo 
      * 
-     * @param codeFatura The code of the invoice to be added to the list of
-     *                   invoices.
+     * @param codeFatura O código da fatura
      */
     public void addFatura(int codeFatura) {
         this.codigosDeFaturas.add(codeFatura);
