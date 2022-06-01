@@ -1,5 +1,5 @@
-Smart Home project for POO 
+Smart Home Management Software
 
 (2 year, 2 Semester)
 
-Made by Pig, Perna and Pica :)
+Made by José, Bernardo and Simão
